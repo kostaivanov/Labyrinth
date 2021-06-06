@@ -32,6 +32,7 @@ public class BetweenFrames : MonoBehaviour
     {
         if (otherObject.tag == "Player")
         {
+            fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.FadeIn();
         }   
     }

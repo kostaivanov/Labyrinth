@@ -9,7 +9,7 @@ public class FadeInOut : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //whiteFade.canvasRenderer.SetAlpha(1.0f);
+        //whiteFade.enabled = false;
         //FadeOut();
     }
 
