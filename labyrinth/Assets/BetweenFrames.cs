@@ -15,7 +15,6 @@ public class BetweenFrames : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(fadeInOutScript.whiteFade.canvasRenderer.GetAlpha());
         if (fadeInOutScript.whiteFade.canvasRenderer.GetAlpha() == 1 && finishedFading == false)
         {
             fadeInOutScript.FadeOut();

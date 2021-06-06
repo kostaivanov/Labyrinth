@@ -9,8 +9,7 @@ public class FadeInOut : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //whiteFade.enabled = false;
-        //FadeOut();
+
     }
 
     // Update is called once per frame
@@ -18,6 +17,7 @@ public class FadeInOut : MonoBehaviour
     {
         whiteFade.CrossFadeAlpha(1, 0.8f, false);
     }
+
     internal void FadeOut()
     {
         whiteFade.CrossFadeAlpha(0, 0.8f, false);

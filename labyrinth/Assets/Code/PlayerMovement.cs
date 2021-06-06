@@ -35,10 +35,9 @@ internal class PlayerMovement : PlayerComponents
             moving = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetAxisRaw("Jump") > 0)
         {
             jumpPressed = true;
-
         }
     }
   
