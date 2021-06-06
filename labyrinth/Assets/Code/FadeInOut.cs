@@ -15,7 +15,7 @@ public class FadeInOut : MonoBehaviour
     // Update is called once per frame
     internal void FadeIn()
     {
-        whiteFade.CrossFadeAlpha(1, 0.8f, false);
+        whiteFade.CrossFadeAlpha(1, 0.5f, false);
     }
 
     internal void FadeOut()
