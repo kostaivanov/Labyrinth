@@ -1720,8 +1720,8 @@ MonoBehaviour:
   - {fileID: 133528391}
   - {fileID: 1241008565}
   m_Bounds:
-    m_Center: {x: 0.037080258, y: 0.16339219, z: 0}
-    m_Extent: {x: 0.49650225, y: 1.840749, z: 0}
+    m_Center: {x: 0.069571674, y: 0.15836227, z: 0}
+    m_Extent: {x: 0.55772036, y: 1.8357191, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
 --- !u!95 &1070416330
@@ -2952,7 +2952,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2033143039
 MonoBehaviour:
   m_ObjectHideFlags: 0
