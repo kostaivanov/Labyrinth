@@ -6,7 +6,7 @@ using UnityEngine;
 internal class PlayerMovement : PlayerComponents
 {
     #region Constants
-    private const float minimumVelocity_X = 1f;
+    private const float minimumVelocity_X = 0.5f;
     private const float minimumFallingVelocity_Y = -2f;
     private const float groundCheckRadius = 0.1f;
     #endregion
@@ -31,9 +31,9 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(moving + " - bqgame weeeeeeeeeeeeeeeee");
+        Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " + state.ToString());
 
-        if (Input.anyKey)
+        if (Input.GetAxisRaw("Horizontal") != 0)
         {
             direction = FindDirection();
             moving = true;
@@ -97,6 +97,7 @@ internal class PlayerMovement : PlayerComponents
 
     protected void AnimationStateSwitch()
     {
+        
         if (rigidBody.velocity.y > 1f && CheckIfGrounded() != true)
         {
             this.state = PlayerState.jumping;
@@ -132,8 +133,8 @@ internal class PlayerMovement : PlayerComponents
 
             }
         }
-
-        else if (moving == true && Mathf.Abs(rigidBody.velocity.x) > minimumVelocity_X && CheckIfGrounded() == true)
+        //&& Mathf.Abs(rigidBody.velocity.x) > minimumVelocity_X
+        else if (moving  && CheckIfGrounded())
         {
             state = PlayerState.moving;
             Debug.Log(PlayerState.moving + " - bqgame");
