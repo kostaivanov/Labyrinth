@@ -1032,7 +1032,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266715238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -56.11111, y: 1.9000002, z: -10}
+  m_LocalPosition: {x: -56.383698, y: 1.9000002, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1309666872}
@@ -2348,6 +2348,8 @@ GameObject:
   - component: {fileID: 800981022}
   - component: {fileID: 800981024}
   - component: {fileID: 800981023}
+  - component: {fileID: 800981025}
+  - component: {fileID: 800981026}
   m_Layer: 8
   m_Name: Platform (3)
   m_TagString: Untagged
@@ -2380,7 +2382,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -2445,6 +2447,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!251 &800981025
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800981021}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 0
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
+--- !u!114 &800981026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800981021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b528b8f308d05284e89f846a0a0f6e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hangingHorizontalOffset: 0
+  hangingVerticalOffset: 0
 --- !u!1 &814312503
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,7 +2667,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859037842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -51.826984, y: 7.272433, z: -10}
+  m_LocalPosition: {x: -53.863605, y: 7.272433, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3296,6 +3331,7 @@ GameObject:
   - component: {fileID: 1070416333}
   - component: {fileID: 1070416332}
   - component: {fileID: 1070416331}
+  - component: {fileID: 1070416334}
   m_Layer: 0
   m_Name: Chris
   m_TagString: Player
@@ -3484,6 +3520,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0727501, y: 3.6714382}
   m_EdgeRadius: 0
+--- !u!114 &1070416334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070416326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b58fc0c81612684087ba851c8328354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbingHorizontalOffset: 1
+  grabbingLedge: 0
 --- !u!1 &1096609283
 GameObject:
   m_ObjectHideFlags: 0
@@ -5772,7 +5822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634931612}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.880886, y: 1.9000005, z: -10}
+  m_LocalPosition: {x: -55.28821, y: 1.9000005, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 276830449}
