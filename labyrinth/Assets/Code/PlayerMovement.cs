@@ -31,7 +31,7 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " + state.ToString());
+        //Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " + state.ToString());
 
         if (Input.GetAxisRaw("Horizontal") != 0)
         {
@@ -101,7 +101,7 @@ internal class PlayerMovement : PlayerComponents
         if (rigidBody.velocity.y > 1f && CheckIfGrounded() != true)
         {
             this.state = PlayerState.jumping;
-            Debug.Log(PlayerState.jumping + " - skachame");
+            //Debug.Log(PlayerState.jumping + " - skachame");
 
         }
 
@@ -110,7 +110,7 @@ internal class PlayerMovement : PlayerComponents
             if (rigidBody.velocity.y == 0 || CheckIfGrounded() == true)
             {
                 state = PlayerState.idle;
-                Debug.Log(PlayerState.idle + " - idle sled skok");
+                //Debug.Log(PlayerState.idle + " - idle sled skok");
             }
         }
 
@@ -129,7 +129,7 @@ internal class PlayerMovement : PlayerComponents
             if (collider2D.IsTouchingLayers(groundLayer))
             {
                 state = PlayerState.idle;
-                Debug.Log(PlayerState.idle + " - idle sled padane");
+                //Debug.Log(PlayerState.idle + " - idle sled padane");
 
             }
         }
@@ -137,21 +137,21 @@ internal class PlayerMovement : PlayerComponents
         else if (moving  && CheckIfGrounded())
         {
             state = PlayerState.moving;
-            Debug.Log(PlayerState.moving + " - bqgame");
+            //Debug.Log(PlayerState.moving + " - bqgame");
 
         }
 
         else
         {
             state = PlayerState.idle;
-            Debug.Log(PlayerState.idle + " - stoim prosto");
+            //Debug.Log(PlayerState.idle + " - stoim prosto");
 
         }
 
         if (rigidBody.velocity.y < minimumFallingVelocity_Y)
         {
             state = PlayerState.falling;
-            Debug.Log(PlayerState.falling + " - padame prosto");
+            //Debug.Log(PlayerState.falling + " - padame prosto");
 
         }
     }

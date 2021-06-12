@@ -26,14 +26,35 @@ internal class WallLocator : PlayerComponents
         LedgeHanging();
     }
 
+    private void Update()
+    {
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (collider2D != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(new Vector3(base.collider2D.bounds.max.x + 0.1f, base.collider2D.bounds.max.y, this.transform.position.z), Vector2.left);
+
+        }
+        //if (ledge != null && ledge.GetComponent<Collider2D>() != null)
+        //{
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawRay(new Vector3(base.collider2D.bounds.max.x + 0.1f, ledge.GetComponent<Collider2D>().bounds.center.y, this.transform.position.z), Vector2.left);
+        //}
+
+    }
+
     protected virtual void CheckForLedge()
     {
         if (!falling)
         {
-            if (transform.localScale.x > 0)
+            if (transform.localScale.x < 0)
             {
-                topOfPlayer = new Vector2(base.collider2D.bounds.max.x + .1f, collider2D.bounds.max.y);
-                RaycastHit2D hit = Physics2D.Raycast(topOfPlayer, Vector2.right, .2f);
+                topOfPlayer = new Vector2(base.collider2D.bounds.max.x + 0.1f, collider2D.bounds.max.y);
+                RaycastHit2D hit = Physics2D.Raycast(topOfPlayer, Vector2.right, 0.2f);
                 if (hit && hit.collider.gameObject.GetComponent<Ledge>())
                 {
                     ledge = hit.collider.gameObject;
@@ -78,7 +99,7 @@ internal class WallLocator : PlayerComponents
         if (grabbingLedge && Input.GetAxis("Vertical") > 0)
         {
             //base.animator.SetBool("LedgeHanging", false);
-            if (transform.localScale.x > 0)
+            if (transform.localScale.x < 0)
             {
                 StartCoroutine(ClimbingLedge(new Vector2(transform.position.x + climbingHorizontalOffset, ledge.GetComponent<Collider2D>().bounds.max.y + base.collider2D.bounds.extents.y), animationTime - .3f));
             }
@@ -122,7 +143,7 @@ internal class WallLocator : PlayerComponents
         if (!moved)
         {
             moved = true;
-            if (transform.localScale.x > 0)
+            if (transform.localScale.x < 0)
             {
                 transform.position = new Vector2((ledge.GetComponent<Collider2D>().bounds.min.x - base.collider2D.bounds.extents.x) + ledge.GetComponent<Ledge>().hangingHorizontalOffset, (ledge.GetComponent<Collider2D>().bounds.max.y - base.collider2D.bounds.extents.y - .5f) + ledge.GetComponent<Ledge>().hangingVerticalOffset);
             }
