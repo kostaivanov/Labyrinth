@@ -43,9 +43,11 @@ internal class PlayerMovement : PlayerComponents
             moving = false;
         }
 
-        if (Input.GetAxisRaw("Jump") > 0)
+        if (jumpPressed == false && Input.GetAxisRaw("Jump") > 0)
         {
             jumpPressed = true;
+            Debug.Log("hop hop hop");
+
         }
     }
   
@@ -101,7 +103,7 @@ internal class PlayerMovement : PlayerComponents
         if (rigidBody.velocity.y > 1f && CheckIfGrounded() != true)
         {
             this.state = PlayerState.jumping;
-            //Debug.Log(PlayerState.jumping + " - skachame");
+            Debug.Log(PlayerState.jumping + " - skachame");
 
         }
 
@@ -120,7 +122,7 @@ internal class PlayerMovement : PlayerComponents
             if (rigidBody.velocity.y < minimumFallingVelocity_Y)
             {
                 state = PlayerState.falling;
-                Debug.Log(PlayerState.falling + " - padame sled skok");
+                //Debug.Log(PlayerState.falling + " - padame sled skok");
             }
         }
 
