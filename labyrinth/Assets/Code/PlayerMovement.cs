@@ -31,7 +31,7 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " + state.ToString());
+        //Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " );
 
         if (Input.GetAxisRaw("Horizontal") != 0)
         {
@@ -42,12 +42,10 @@ internal class PlayerMovement : PlayerComponents
         {
             moving = false;
         }
-
-        if (jumpPressed == false && Input.GetAxisRaw("Jump") > 0)
+        //Input.GetAxisRaw("Jump") > 0
+        if (Input.GetAxisRaw("Jump") > 0)
         {
             jumpPressed = true;
-            Debug.Log("hop hop hop");
-
         }
     }
   
@@ -70,11 +68,19 @@ internal class PlayerMovement : PlayerComponents
 
         }
 
-        if (jumpPressed == true && CheckIfGrounded())
+        if (jumpPressed == true)
         {
-            rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            Jump();
 
             jumpPressed = false;
+        }
+    }
+
+    private void Jump()
+    {
+        if (CheckIfGrounded())
+        {
+            rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 
