@@ -11,11 +11,39 @@ public class TeleportController
         {
             if (player.transform.position.x > teleportObject.transform.position.x)
             {
-                player.transform.position = teleportObject.transform.GetChild(1).position;
+                if (teleportObject.transform.childCount > 2)
+                {
+                    if (player.transform.position.y < teleportObject.transform.position.y)
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(0).position;
+                    }
+                    else
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(2).position;
+                    }
+                }
+                else
+                {
+                    player.transform.position = teleportObject.transform.GetChild(0).position;
+                }
             }
             else
             {
-                player.transform.position = teleportObject.transform.GetChild(0).position;
+                if (teleportObject.transform.childCount > 2)
+                {
+                    if (player.transform.position.y < teleportObject.transform.position.y)
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(1).position;
+                    }
+                    else
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(3).position;
+                    }
+                }
+                else
+                {
+                    player.transform.position = teleportObject.transform.GetChild(1).position;
+                }
             }
         }
     }
@@ -49,8 +77,8 @@ public class TeleportController
         float dot = pFrwd.x * rDir.x + pFrwd.y * rDir.y;
         float angle = Mathf.Acos(dot / (pFrwd.magnitude * rDir.magnitude));
 
-        Debug.Log("Angle: " + angle * Mathf.Rad2Deg);
-        Debug.Log("Unity angle: " + Vector3.Angle(pFrwd, rDir));
+        //Debug.Log("Angle: " + angle * Mathf.Rad2Deg);
+        //Debug.Log("Unity angle: " + Vector3.Angle(pFrwd, rDir));
 
         Debug.DrawRay(player.transform.position, pFrwd * 15, Color.green, 2);
         Debug.DrawRay(player.transform.position, rDir, Color.red, 2);

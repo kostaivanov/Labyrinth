@@ -30,7 +30,7 @@ public class BetweenFrames : MonoBehaviour
             {
                 teleportController.Teleport(player, this.gameObject);
             }
-            Debug.Log("how many times");
+
             finishedFading = true;
 
             StartCoroutine(WaitBeforeStartTransparent());
@@ -47,10 +47,14 @@ public class BetweenFrames : MonoBehaviour
         if (otherObject.tag == "Player" && triggered == false)
         {
             player = otherObject.gameObject;
-            player.GetComponent<PlayerMovement>().enabled = false;
+            //player.GetComponent<PlayerMovement>().enabled = false;
+            player.GetComponent<PlayerMovement>().CanMove = false;
             fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.BecomeDark();
             triggered = true;
+            Debug.Log("how many times");
+            Debug.Log(player == null);
+
         }
     }
 
@@ -64,13 +68,16 @@ public class BetweenFrames : MonoBehaviour
 
     private IEnumerator WaitBeforeStartTransparent()
     {
+        player.GetComponent<PlayerMovement>().enabled = false;
         yield return new WaitForSecondsRealtime(0.8f);
         if (player != null)
         {
             teleportController.ChangeFrameCamera(player, virtualCams, this.gameObject);
         }
         fadeInOutScript.BecomeTransparent();
-        player.GetComponent<PlayerMovement>().enabled = true;
+        //player.GetComponent<PlayerMovement>().enabled = true;
+        player.GetComponent<PlayerMovement>().CanMove = true;
+
         finishedFading = false;
     }
 }

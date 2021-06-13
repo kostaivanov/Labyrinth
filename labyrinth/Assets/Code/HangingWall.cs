@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class Ledge : MonoBehaviour
+public class HangingWall : MonoBehaviour
 {
     [SerializeField] internal float hangingHorizontalOffset;
     [SerializeField] internal float hangingVerticalOffset;

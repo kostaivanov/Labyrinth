@@ -20,12 +20,21 @@ internal class PlayerMovement : PlayerComponents
 
     private float direction;
 
+    private bool canMove;
+
+    public bool CanMove
+    {
+        get { return canMove; }
+        set { canMove = value; }
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         moving = false;
         jumpPressed = false;
+        CanMove = true;
     }
 
     // Update is called once per frame
@@ -33,7 +42,7 @@ internal class PlayerMovement : PlayerComponents
     {
         //Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " );
 
-        if (Input.GetAxisRaw("Horizontal") != 0)
+        if (Input.GetAxisRaw("Horizontal") != 0 && CanMove == true)
         {
             direction = FindDirection();
             moving = true;
@@ -42,7 +51,7 @@ internal class PlayerMovement : PlayerComponents
         {
             moving = false;
         }
-        //Input.GetAxisRaw("Jump") > 0
+
         if (Input.GetAxisRaw("Jump") > 0)
         {
             jumpPressed = true;
@@ -109,8 +118,7 @@ internal class PlayerMovement : PlayerComponents
         if (rigidBody.velocity.y > 1f && CheckIfGrounded() != true)
         {
             this.state = PlayerState.jumping;
-            Debug.Log(PlayerState.jumping + " - skachame");
-
+            //Debug.Log(PlayerState.jumping + " - skachame");
         }
 
         else if (state == PlayerState.jumping)
