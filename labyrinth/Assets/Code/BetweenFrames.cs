@@ -48,7 +48,10 @@ public class BetweenFrames : MonoBehaviour
         {
             player = otherObject.gameObject;
             //player.GetComponent<PlayerMovement>().enabled = false;
-            player.GetComponent<PlayerMovement>().CanMove = false;
+            if (player != null)
+            {
+                player.GetComponent<PlayerMovement>().CanMove = false;
+            }
             fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.BecomeDark();
             triggered = true;
@@ -68,7 +71,6 @@ public class BetweenFrames : MonoBehaviour
 
     private IEnumerator WaitBeforeStartTransparent()
     {
-        player.GetComponent<PlayerMovement>().enabled = false;
         yield return new WaitForSecondsRealtime(0.8f);
         if (player != null)
         {
@@ -76,7 +78,10 @@ public class BetweenFrames : MonoBehaviour
         }
         fadeInOutScript.BecomeTransparent();
         //player.GetComponent<PlayerMovement>().enabled = true;
-        player.GetComponent<PlayerMovement>().CanMove = true;
+        if (player != null)
+        {
+            player.GetComponent<PlayerMovement>().CanMove = true;
+        }
 
         finishedFading = false;
     }

@@ -7,13 +7,27 @@ public class TeleportController
 
     internal void Teleport(GameObject player, GameObject teleportObject)
     {
-        if (Mathf.Abs(player.transform.position.x - teleportObject.transform.position.x) > 1.5f)
+        Collider2D teleportColliders = teleportObject.GetComponent<Collider2D>();
+        if (teleportColliders.bounds.extents.x > teleportColliders.bounds.extents.y)
         {
-            if (player.transform.position.x > teleportObject.transform.position.x)
+            GateTeleport(player, teleportObject, player.transform.position.y, teleportObject.transform.position.y, player.transform.position.x, teleportObject.transform.position.x);
+        }
+        else
+        {
+            GateTeleport(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
+        }
+
+    }
+
+    private static void GateTeleport(GameObject player, GameObject teleportObject, float playerPos_1, float teleportPos_1, float playerPos_2, float teleportPos_2)
+    {
+        if (Mathf.Abs(playerPos_1 - teleportPos_1) > 1.5f)
+        {
+            if (playerPos_1 > teleportPos_1)
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (player.transform.position.y < teleportObject.transform.position.y)
+                    if (playerPos_2 < teleportPos_2)
                     {
                         player.transform.position = teleportObject.transform.GetChild(0).position;
                     }
@@ -31,7 +45,7 @@ public class TeleportController
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (player.transform.position.y < teleportObject.transform.position.y)
+                    if (playerPos_2 < teleportPos_2)
                     {
                         player.transform.position = teleportObject.transform.GetChild(1).position;
                     }
