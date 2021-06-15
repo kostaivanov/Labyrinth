@@ -10,24 +10,67 @@ public class TeleportController
         Collider2D teleportColliders = teleportObject.GetComponent<Collider2D>();
         if (teleportColliders.bounds.extents.x > teleportColliders.bounds.extents.y)
         {
-            GateTeleport(player, teleportObject, player.transform.position.y, teleportObject.transform.position.y, player.transform.position.x, teleportObject.transform.position.x);
+            GateTeleportHorizonta(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
         }
         else
         {
-            GateTeleport(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
+            GateTeleportVertical(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
         }
 
     }
 
-    private static void GateTeleport(GameObject player, GameObject teleportObject, float playerPos_1, float teleportPos_1, float playerPos_2, float teleportPos_2)
+    private static void GateTeleportHorizonta(GameObject player, GameObject teleportObject, float playerPos_X, float teleportPos_X, float playerPos_Y, float teleportPos_Y)
     {
-        if (Mathf.Abs(playerPos_1 - teleportPos_1) > 1.5f)
+        if (Mathf.Abs(playerPos_Y - teleportPos_Y) > 1.5f)
         {
-            if (playerPos_1 > teleportPos_1)
+            if (playerPos_Y > teleportPos_Y)
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_2 < teleportPos_2)
+                    if (playerPos_X < teleportPos_X)
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(1).position;
+                    }
+                    else
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(3).position;
+                    }
+                }
+                else
+                {
+                    player.transform.position = teleportObject.transform.GetChild(1).position;
+                }
+            }
+            else
+            {
+                if (teleportObject.transform.childCount > 2)
+                {
+                    if (playerPos_X < teleportPos_X)
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(0).position;
+                    }
+                    else
+                    {
+                        player.transform.position = teleportObject.transform.GetChild(2).position;
+                    }
+                }
+                else
+                {
+                    player.transform.position = teleportObject.transform.GetChild(0).position;
+                }
+            }
+        }
+    }
+
+    private static void GateTeleportVertical(GameObject player, GameObject teleportObject, float playerPos_X, float teleportPos_X, float playerPos_Y, float teleportPos_Y)
+    {
+        if (Mathf.Abs(playerPos_X - teleportPos_X) > 1.5f)
+        {
+            if (playerPos_X > teleportPos_X)
+            {
+                if (teleportObject.transform.childCount > 2)
+                {
+                    if (playerPos_Y < teleportPos_Y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(0).position;
                     }
@@ -45,7 +88,7 @@ public class TeleportController
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_2 < teleportPos_2)
+                    if (playerPos_Y < teleportPos_Y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(1).position;
                     }
@@ -68,37 +111,68 @@ public class TeleportController
 
         string firstFrameIndex = name[0];
         string secondFrameIndex = name[name.Length - 1];
+        Debug.Log(firstFrameIndex + " - " + secondFrameIndex);
+        Collider2D teleportCollider = teleportObject.GetComponent<Collider2D>();
 
-        int angleValue = CalculateAngle(player, teleportObject);
+        int angleValue;
 
-        if (angleValue < 0)
+        if (teleportCollider.bounds.extents.x > teleportCollider.bounds.extents.y)
         {
-            cameras[int.Parse(secondFrameIndex)].SetActive(false);
-            cameras[int.Parse(firstFrameIndex)].SetActive(true);
+            angleValue = CalculateAngle(player, teleportObject, player.transform.right);
         }
         else
         {
-            cameras[int.Parse(firstFrameIndex)].SetActive(false);
-            cameras[int.Parse(secondFrameIndex)].SetActive(true);
+            angleValue = CalculateAngle(player, teleportObject, player.transform.up);
+
         }
+
+        if (teleportCollider.bounds.extents.x < teleportCollider.bounds.extents.y)
+        {
+            if (angleValue < 0)
+            {
+                cameras[int.Parse(secondFrameIndex)].SetActive(false);
+                cameras[int.Parse(firstFrameIndex)].SetActive(true);
+                Debug.Log("preminavame ot 1 kym 0 frame");
+            }
+            else
+            {
+                cameras[int.Parse(firstFrameIndex)].SetActive(false);
+                cameras[int.Parse(secondFrameIndex)].SetActive(true);
+                Debug.Log("preminavame ot 0 kym 1 frame");
+            }
+        }
+        else if(teleportCollider.bounds.extents.x > teleportCollider.bounds.extents.y)
+        {
+            if (angleValue < 0)
+            {
+                cameras[int.Parse(secondFrameIndex)].SetActive(false);
+                cameras[int.Parse(firstFrameIndex)].SetActive(true);
+            }
+            else
+            {
+                cameras[int.Parse(firstFrameIndex)].SetActive(false);
+                cameras[int.Parse(secondFrameIndex)].SetActive(true);
+            }
+        }
+       
     }
 
-    private int CalculateAngle(GameObject player, GameObject teleportObject)
+    private int CalculateAngle(GameObject player, GameObject teleportObject, Vector3 pForward)
     {
-        Vector3 pFrwd = player.transform.up;
+        //Vector3 pFrwd = player.transform.up;
         Vector3 rDir = teleportObject.transform.position - player.transform.position;
 
-        float dot = pFrwd.x * rDir.x + pFrwd.y * rDir.y;
-        float angle = Mathf.Acos(dot / (pFrwd.magnitude * rDir.magnitude));
+        float dot = pForward.x * rDir.x + pForward.y * rDir.y;
+        float angle = Mathf.Acos(dot / (pForward.magnitude * rDir.magnitude));
 
         //Debug.Log("Angle: " + angle * Mathf.Rad2Deg);
         //Debug.Log("Unity angle: " + Vector3.Angle(pFrwd, rDir));
 
-        Debug.DrawRay(player.transform.position, pFrwd * 15, Color.green, 2);
+        Debug.DrawRay(player.transform.position, pForward * 15, Color.green, 2);
         Debug.DrawRay(player.transform.position, rDir, Color.red, 2);
 
         int clockWise = 1;
-        if (CrossProduct(pFrwd, rDir).z < 0)
+        if (CrossProduct(pForward, rDir).z < 0)
         {
             clockWise = -1;
         }

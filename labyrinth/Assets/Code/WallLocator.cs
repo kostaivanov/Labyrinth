@@ -11,6 +11,7 @@ internal class WallLocator : PlayerComponents
     private float animationTime = 0.5f;
     private bool falling;
     private bool moved;
+    internal bool movingBetweenFrames;
 
     [HideInInspector]
     public bool grabbingLedge;
@@ -19,6 +20,7 @@ internal class WallLocator : PlayerComponents
     protected override void Start()
     {
         base.Start();
+        movingBetweenFrames = false;
     }
     protected virtual void FixedUpdate()
     {
@@ -85,6 +87,11 @@ internal class WallLocator : PlayerComponents
                 base.rigidBody.velocity = Vector2.zero;
                 base.rigidBody.bodyType = RigidbodyType2D.Kinematic;
                 GetComponent<PlayerMovement>().enabled = false;
+            }
+            else if(movingBetweenFrames == true)
+            {
+                base.rigidBody.velocity = Vector2.zero;
+                base.rigidBody.bodyType = RigidbodyType2D.Kinematic;
             }
             else
             {

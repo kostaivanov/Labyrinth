@@ -19,6 +19,7 @@ public class BetweenFrames : MonoBehaviour
         fadeInOutScript.whiteFade.canvasRenderer.SetAlpha(0.0f);
         teleportController = new TeleportController();
         virtualCams[1].SetActive(false);
+        virtualCams[2].SetActive(false);
     }
 
     // Update is called once per frame
@@ -52,12 +53,12 @@ public class BetweenFrames : MonoBehaviour
             {
                 player.GetComponent<PlayerMovement>().CanMove = false;
             }
+            player.GetComponent<WallLocator>().movingBetweenFrames = true;
             fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.BecomeDark();
             triggered = true;
             Debug.Log("how many times");
-            Debug.Log(player == null);
-
+            //Debug.Log(player == null);
         }
     }
 
@@ -81,6 +82,8 @@ public class BetweenFrames : MonoBehaviour
         if (player != null)
         {
             player.GetComponent<PlayerMovement>().CanMove = true;
+            player.GetComponent<WallLocator>().movingBetweenFrames = false;
+
         }
 
         finishedFading = false;
