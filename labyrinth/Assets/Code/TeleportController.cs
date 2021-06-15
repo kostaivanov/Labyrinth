@@ -10,24 +10,26 @@ public class TeleportController
         Collider2D teleportColliders = teleportObject.GetComponent<Collider2D>();
         if (teleportColliders.bounds.extents.x > teleportColliders.bounds.extents.y)
         {
-            GateTeleportHorizonta(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
+            GateTeleportHorizontal(player, teleportObject);
+            //Debug.Log("Horizontalnata");
+
         }
         else
         {
-            GateTeleportVertical(player, teleportObject, player.transform.position.x, teleportObject.transform.position.x, player.transform.position.y, teleportObject.transform.position.y);
+            GateTeleportVertical(player, teleportObject);
         }
 
     }
 
-    private static void GateTeleportHorizonta(GameObject player, GameObject teleportObject, float playerPos_X, float teleportPos_X, float playerPos_Y, float teleportPos_Y)
+    private static void GateTeleportHorizontal(GameObject player, GameObject teleportObject)
     {
-        if (Mathf.Abs(playerPos_Y - teleportPos_Y) > 1.5f)
+        if (Mathf.Abs(player.transform.position.y - teleportObject.transform.position.y) > 1.5f)
         {
-            if (playerPos_Y > teleportPos_Y)
+            if (player.transform.position.y > teleportObject.transform.position.y)
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_X < teleportPos_X)
+                    if (player.transform.position.x < teleportObject.transform.position.x)
                     {
                         player.transform.position = teleportObject.transform.GetChild(1).position;
                     }
@@ -45,7 +47,7 @@ public class TeleportController
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_X < teleportPos_X)
+                    if (player.transform.position.x < teleportObject.transform.position.x)
                     {
                         player.transform.position = teleportObject.transform.GetChild(0).position;
                     }
@@ -62,35 +64,43 @@ public class TeleportController
         }
     }
 
-    private static void GateTeleportVertical(GameObject player, GameObject teleportObject, float playerPos_X, float teleportPos_X, float playerPos_Y, float teleportPos_Y)
+    private static void GateTeleportVertical(GameObject player, GameObject teleportObject)
     {
-        if (Mathf.Abs(playerPos_X - teleportPos_X) > 1.5f)
+        //Debug.Log("Player x position - " + player.transform.position.x);
+       //Debug.Log("teleporta x position - " + teleportObject.transform.position.x);
+
+        if (Mathf.Abs(player.transform.position.x - teleportObject.transform.position.x) > 1.5f)
         {
-            if (playerPos_X > teleportPos_X)
+            if (player.transform.position.x > teleportObject.transform.position.x)
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_Y < teleportPos_Y)
+                    if (player.transform.position.y < teleportObject.transform.position.y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(0).position;
+                        Debug.Log("otdqsno nalqvo - dolu");
                     }
                     else
                     {
                         player.transform.position = teleportObject.transform.GetChild(2).position;
+                        Debug.Log("otdqsno nalqvo - gore");
                     }
                 }
                 else
                 {
                     player.transform.position = teleportObject.transform.GetChild(0).position;
+
                 }
             }
             else
             {
                 if (teleportObject.transform.childCount > 2)
                 {
-                    if (playerPos_Y < teleportPos_Y)
+                    if (player.transform.position.y < teleportObject.transform.position.y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(1).position;
+                        Debug.Log("otdqsno nalqvo - dolu dasdasdsa");
+
                     }
                     else
                     {
@@ -100,6 +110,8 @@ public class TeleportController
                 else
                 {
                     player.transform.position = teleportObject.transform.GetChild(1).position;
+                    Debug.Log("otlqvo nadqsno - dolu");
+
                 }
             }
         }
@@ -111,10 +123,10 @@ public class TeleportController
 
         string firstFrameIndex = name[0];
         string secondFrameIndex = name[name.Length - 1];
-        Debug.Log(firstFrameIndex + " - " + secondFrameIndex);
+        //Debug.Log(firstFrameIndex + " - " + secondFrameIndex);
         Collider2D teleportCollider = teleportObject.GetComponent<Collider2D>();
 
-        int angleValue;
+        int angleValue = 0;
 
         if (teleportCollider.bounds.extents.x > teleportCollider.bounds.extents.y)
         {

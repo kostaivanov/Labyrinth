@@ -25,11 +25,15 @@ public class BetweenFrames : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(finishedFading);
+
         if (fadeInOutScript.whiteFade.canvasRenderer.GetAlpha() == 1 && finishedFading == false)
         {
             if (player != null)
             {
                 teleportController.Teleport(player, this.gameObject);
+                Debug.Log("Player x position - " + player.transform.position.x);
+                Debug.Log("how many times");
             }
 
             finishedFading = true;
@@ -57,7 +61,7 @@ public class BetweenFrames : MonoBehaviour
             fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.BecomeDark();
             triggered = true;
-            Debug.Log("how many times");
+            //Debug.Log("how many times");
             //Debug.Log(player == null);
         }
     }
