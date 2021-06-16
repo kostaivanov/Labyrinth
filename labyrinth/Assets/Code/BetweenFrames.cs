@@ -12,28 +12,29 @@ public class BetweenFrames : MonoBehaviour
 
     internal bool finishedFading = false;
     private bool triggered = false;
+    private GameObject currentTeleport;
 
     // Start is called before the first frame update
     void Start()
     {
         fadeInOutScript.whiteFade.canvasRenderer.SetAlpha(0.0f);
         teleportController = new TeleportController();
-        virtualCams[1].SetActive(false);
+        virtualCams[0].SetActive(false);
         virtualCams[2].SetActive(false);
+        virtualCams[3].SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(finishedFading);
+        //Debug.Log(finishedFading);
 
-        if (fadeInOutScript.whiteFade.canvasRenderer.GetAlpha() == 1 && finishedFading == false)
+        if (currentTeleport != null && fadeInOutScript.whiteFade.canvasRenderer.GetAlpha() == 1 && finishedFading == false && currentTeleport.name == this.gameObject.name)
         {
+            currentTeleport = null;
             if (player != null)
             {
                 teleportController.Teleport(player, this.gameObject);
-                Debug.Log("Player x position - " + player.transform.position.x);
-                Debug.Log("how many times");
             }
 
             finishedFading = true;
@@ -51,6 +52,7 @@ public class BetweenFrames : MonoBehaviour
     {
         if (otherObject.tag == "Player" && triggered == false)
         {
+            currentTeleport = this.gameObject;
             player = otherObject.gameObject;
             //player.GetComponent<PlayerMovement>().enabled = false;
             if (player != null)
@@ -61,8 +63,6 @@ public class BetweenFrames : MonoBehaviour
             fadeInOutScript.whiteFade.enabled = true;
             fadeInOutScript.BecomeDark();
             triggered = true;
-            //Debug.Log("how many times");
-            //Debug.Log(player == null);
         }
     }
 

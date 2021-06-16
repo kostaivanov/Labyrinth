@@ -11,8 +11,6 @@ public class TeleportController
         if (teleportColliders.bounds.extents.x > teleportColliders.bounds.extents.y)
         {
             GateTeleportHorizontal(player, teleportObject);
-            //Debug.Log("Horizontalnata");
-
         }
         else
         {
@@ -66,9 +64,6 @@ public class TeleportController
 
     private static void GateTeleportVertical(GameObject player, GameObject teleportObject)
     {
-        //Debug.Log("Player x position - " + player.transform.position.x);
-       //Debug.Log("teleporta x position - " + teleportObject.transform.position.x);
-
         if (Mathf.Abs(player.transform.position.x - teleportObject.transform.position.x) > 1.5f)
         {
             if (player.transform.position.x > teleportObject.transform.position.x)
@@ -78,12 +73,12 @@ public class TeleportController
                     if (player.transform.position.y < teleportObject.transform.position.y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(0).position;
-                        Debug.Log("otdqsno nalqvo - dolu");
+                        //Debug.Log("otdqsno nalqvo - dolu");
                     }
                     else
                     {
                         player.transform.position = teleportObject.transform.GetChild(2).position;
-                        Debug.Log("otdqsno nalqvo - gore");
+                        //Debug.Log("otdqsno nalqvo - gore");
                     }
                 }
                 else
@@ -99,7 +94,7 @@ public class TeleportController
                     if (player.transform.position.y < teleportObject.transform.position.y)
                     {
                         player.transform.position = teleportObject.transform.GetChild(1).position;
-                        Debug.Log("otdqsno nalqvo - dolu dasdasdsa");
+                        //Debug.Log("otdqsno nalqvo - dolu dasdasdsa");
 
                     }
                     else
@@ -110,7 +105,7 @@ public class TeleportController
                 else
                 {
                     player.transform.position = teleportObject.transform.GetChild(1).position;
-                    Debug.Log("otlqvo nadqsno - dolu");
+                    //Debug.Log("otlqvo nadqsno - dolu");
 
                 }
             }
@@ -144,13 +139,13 @@ public class TeleportController
             {
                 cameras[int.Parse(secondFrameIndex)].SetActive(false);
                 cameras[int.Parse(firstFrameIndex)].SetActive(true);
-                Debug.Log("preminavame ot 1 kym 0 frame");
+                //Debug.Log("preminavame ot 1 kym 0 frame");
             }
             else
             {
                 cameras[int.Parse(firstFrameIndex)].SetActive(false);
                 cameras[int.Parse(secondFrameIndex)].SetActive(true);
-                Debug.Log("preminavame ot 0 kym 1 frame");
+                //Debug.Log("preminavame ot 0 kym 1 frame");
             }
         }
         else if(teleportCollider.bounds.extents.x > teleportCollider.bounds.extents.y)
