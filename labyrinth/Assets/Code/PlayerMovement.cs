@@ -66,13 +66,13 @@ internal class PlayerMovement : PlayerComponents
             if (direction < 0)
             {
                 rigidBody.velocity = new Vector2(direction * speed, rigidBody.velocity.y);
-                this.transform.localScale = new Vector2(1, 1);
+                this.transform.localScale = new Vector2(-1, 1);
             }
 
             if (direction > 0)
             {
                 rigidBody.velocity = new Vector2(direction * speed, rigidBody.velocity.y);
-                this.transform.localScale = new Vector2(-1, 1);
+                this.transform.localScale = new Vector2(1, 1);
             }
 
         }
