@@ -21,7 +21,7 @@ internal abstract class PlayerComponents : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         collider2D = GetComponent<Collider2D>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         //playerMovement = GetComponent<PlayerMovement>();
         groundLayer = LayerMask.GetMask("GroundLayer");
         playerSprite = GetComponent<SpriteRenderer>();
