@@ -121,6 +121,11 @@ internal class PlayerMovement : PlayerComponents
             //Debug.Log(PlayerState.jumping + " - skachame");
         }
 
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Falling") && state == PlayerState.falling && collider2D.IsTouchingLayers(groundLayer))
+        {
+            state = PlayerState.landing;            
+        }
+
         else if (state == PlayerState.jumping)
         {
             if (rigidBody.velocity.y == 0 || CheckIfGrounded() == true)

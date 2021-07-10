@@ -8,5 +8,6 @@ internal enum PlayerState
     moving,
     jumping,
     falling,
+    landing
 }
 
