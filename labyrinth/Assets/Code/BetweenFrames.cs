@@ -19,7 +19,7 @@ public class BetweenFrames : MonoBehaviour
     {
         fadeInOutScript.whiteFade.canvasRenderer.SetAlpha(0.0f);
         teleportController = new TeleportController();
-        virtualCams[0].SetActive(false);
+        virtualCams[1].SetActive(false);
         virtualCams[2].SetActive(false);
         virtualCams[3].SetActive(false);
     }
