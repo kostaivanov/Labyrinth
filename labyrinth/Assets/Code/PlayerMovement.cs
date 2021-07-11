@@ -13,10 +13,15 @@ internal class PlayerMovement : PlayerComponents
 
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
+    private float jumpForce_2;
+    Vector2 counterJumpForce = Vector2.down;
+
+
     private float extrHeightText = 0.1f;
 
     private bool moving;
     private bool jumpPressed;
+    private bool isJumping;
 
     private float direction;
 
@@ -56,10 +61,15 @@ internal class PlayerMovement : PlayerComponents
         {
             jumpPressed = true;
         }
+        else if (Input.GetButtonUp("Jump"))
+        {
+            jumpPressed = false;
+        }
     }
   
     private void FixedUpdate()
     {
+
         if (moving == true)
         {
             //rigidBody.MovePosition(rigidBody.position + new Vector2(direction * speed, 0) * Time.deltaTime);
@@ -80,16 +90,36 @@ internal class PlayerMovement : PlayerComponents
         if (jumpPressed == true)
         {
             Jump();
-
-            jumpPressed = false;
+            //jumpPressed = false;
         }
+
+        if (isJumping)
+        {
+            if (!jumpPressed && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
+            {
+                rigidBody.AddForce(counterJumpForce * rigidBody.mass * 20.0f, ForceMode2D.Impulse);
+            }
+        }
+    }
+    public static float CalculateJumpForce(float gravityStrength, float jumpHeight)
+    {
+        //h = v^2/2g
+        //2gh = v^2
+        //sqrt(2gh) = v
+        return Mathf.Sqrt(2 * gravityStrength * jumpHeight);
     }
 
     private void Jump()
     {
         if (CheckIfGrounded())
         {
-            rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            isJumping = true;
+
+            jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, 90.0f);
+
+            //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
+            rigidBody.AddForce(Vector2.up * jumpForce_2 * rigidBody.mass, ForceMode2D.Impulse);
+
         }
     }
 
