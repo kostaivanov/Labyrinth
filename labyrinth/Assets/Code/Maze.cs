@@ -13,7 +13,7 @@ public class Maze : MonoBehaviour
     };
 
     [SerializeField] internal SpriteRenderer backGround;
-    [SerializeField] private PolygonCollider2D groundCollider;
+    [SerializeField] private PolygonCollider2D backGroundCollider;
     [SerializeField] private LayerMask groundLayer;
 
     internal int width;
@@ -38,8 +38,7 @@ public class Maze : MonoBehaviour
 
     private void FindMapSpace()
     {
-        groundCollider = gameObject.GetComponent<PolygonCollider2D>();
-        Collider2D[] overlap = Physics2D.OverlapAreaAll(groundCollider.bounds.min, groundCollider.bounds.max, groundLayer);
+        Collider2D[] overlap = Physics2D.OverlapAreaAll(backGroundCollider.bounds.min, backGroundCollider.bounds.max, groundLayer);
         if (overlap.Length > 1)
         {
             Debug.Log(string.Format("Found {0} overlapping object(s)", overlap.Length - 1));
@@ -48,6 +47,20 @@ public class Maze : MonoBehaviour
         foreach (Collider2D item in overlap)
         {
             Debug.Log(item.transform.position.x);
+        }
+    }
+
+    public virtual void MarkGround()
+    {
+        for (int z = 0; z < height; z++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (backGroundCollider.IsTouchingLayers(groundLayer))
+                {
+                    map[x, z] = 0;
+                }
+            }
         }
     }
 
