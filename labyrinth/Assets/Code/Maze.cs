@@ -13,6 +13,8 @@ public class Maze : MonoBehaviour
     };
 
     [SerializeField] internal SpriteRenderer backGround;
+    [SerializeField] private PolygonCollider2D groundCollider;
+    [SerializeField] private LayerMask groundLayer;
 
     internal int width;
     internal int height;
@@ -24,5 +26,36 @@ public class Maze : MonoBehaviour
         width = (int)backGround.bounds.size.x;
         height = (int)backGround.bounds.size.y;
     }
+    void InitialiseMap()
+    {
+        map = new byte[width, height];
+        for (int z = 0; z < height; z++)
+            for (int x = 0; x < width; x++)
+            {
+                map[x, z] = 0;     //1 = wall  0 = corridor
+            }
+    }
 
+    private void FindMapSpace()
+    {
+        groundCollider = gameObject.GetComponent<PolygonCollider2D>();
+        Collider2D[] overlap = Physics2D.OverlapAreaAll(groundCollider.bounds.min, groundCollider.bounds.max, groundLayer);
+        if (overlap.Length > 1)
+        {
+            Debug.Log(string.Format("Found {0} overlapping object(s)", overlap.Length - 1));
+        }
+
+        foreach (Collider2D item in overlap)
+        {
+            Debug.Log(item.transform.position.x);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindMapSpace();
+        }
+    }
 }
