@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class FindPathEnemy : MonoBehaviour
 {
@@ -64,11 +65,71 @@ public class FindPathEnemy : MonoBehaviour
         foreach (LocationOnTheMap dir in maze.directions)
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
+            if (maze.map[neighbour.x, neighbour.y] == 1)
+            {
+                continue;
+            }
+            if (neighbour.x > 1 || neighbour.x >= maze.width || neighbour.y < 1 || neighbour.y >= maze.height)
+            {
+                continue;
+            }
+            if (IsClosed(neighbour))
+            {
+                continue;
+            }
 
+            float G = Vector2.Distance(thisNode.location.ToVector(), neighbour.ToVector()) + thisNode.G;
+            float H = Vector2.Distance(neighbour.ToVector(), goalNode.location.ToVector());
+            float F = G + H;
+
+            
+            GameObject pathBlock = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), new Vector3(neighbour.x, neighbour.y, 0), Quaternion.identity);
+            if (!UpdateMarker(neighbour, G, H, F, thisNode))
+            {
+                open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
+            }
         }
+
+        open = open.OrderBy(p => p.G).ToList<PathMarker>();
+        PathMarker pm = (PathMarker)open.ElementAt(0);
+
+        closed.Add(pm);
+        open.RemoveAt(0);
+
+        pm.marker.GetComponent<Renderer>().material = closedMaterial;
+
+        lastPosition = pm;
     }
 
-   
+    private bool UpdateMarker(LocationOnTheMap position, float g, float h, float f, PathMarker parent)
+    {
+        foreach (PathMarker p in open)
+        {
+            if (p.location.Equals(position))
+            {
+                p.G = g;
+                p.H = h;
+                p.F = f;
+                p.parent = parent;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+   private bool IsClosed(LocationOnTheMap marker)
+    {
+        foreach (PathMarker p in closed)
+        {
+            if (p.location.Equals(marker))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     // Start is called before the first frame update
     void Start()
     {

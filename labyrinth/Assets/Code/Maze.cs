@@ -29,14 +29,14 @@ public class Maze : MonoBehaviour
         width = (int)backGround.bounds.size.x;
         height = (int)backGround.bounds.size.y;
 
-        InitialiseMap();
-        MarkTheGround();
-        DrawMap();
+       
         initialPosition = new Vector3(backGround.gameObject.transform.position.x - backGround.bounds.extents.x, backGround.gameObject.transform.position.y - backGround.bounds.extents.y, 0);
         objectChecker.transform.position = initialPosition;
         //Debug.Log("map width = " + map.GetLength(0));
         //Debug.Log("map height = " + map.GetLength(1));
-
+        InitialiseMap();
+        MarkTheGround();
+        DrawMap();
     }
     void InitialiseMap()
     {
@@ -87,7 +87,7 @@ public class Maze : MonoBehaviour
             {
                 Vector3 pos = new Vector3(initialPosition.x + x, initialPosition.y + y, 0);
                 objectChecker.transform.position = pos;
-                bool colliders = Physics2D.OverlapBox(objectChecker.transform.position, new Vector3(1, 1, 0), 90, groundLayer);
+                bool colliders = Physics2D.OverlapBox(objectChecker.transform.position, new Vector3(0.5f, 0.5f, 0), 90, groundLayer);
                 if (colliders)
                 {
                     map[x, y] = 1;
