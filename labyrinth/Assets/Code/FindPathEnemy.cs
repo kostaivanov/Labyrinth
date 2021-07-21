@@ -12,8 +12,8 @@ public class FindPathEnemy : MonoBehaviour
     List<PathMarker> open = new List<PathMarker>();
     List<PathMarker> closed = new List<PathMarker>();
 
-    [SerializeField] private GameObject start;
-    [SerializeField] private GameObject end;
+    //[SerializeField] private GameObject start;
+    //[SerializeField] private GameObject end;
     [SerializeField] private GameObject PathParent;
 
 
@@ -38,8 +38,20 @@ public class FindPathEnemy : MonoBehaviour
     private void BeginSearch()
     {
         done = false;
-
+        //RemoveAllMarker();
         List<LocationOnTheMap> locations = new List<LocationOnTheMap>();
+        for (int z = 1; z < maze.height - 1; z++)
+        {
+            for (int x = 1; x < maze.width - 1; x++)
+            {
+                if (maze.map[x, z] != 1)
+                {
+                    locations.Add(new LocationOnTheMap(x, z));
+                }
+            }
+        }
+
+        
 
         Vector3 startLocation = new Vector3(startObject.transform.position.x, startObject.transform.position.y, 0);
         startNode = new PathMarker(new LocationOnTheMap((int)startObject.transform.position.x, (int)startObject.transform.position.y), 0, 0, 0, null, null);
@@ -139,6 +151,13 @@ public class FindPathEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            BeginSearch();
+        }
+        if (Input.GetKeyDown(KeyCode.S) && !done)
+        {
+            Search(lastPosition);
+        }
     }
 }

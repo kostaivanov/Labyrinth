@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathMarker : MonoBehaviour
+public class PathMarker
 {
     internal LocationOnTheMap location;
     internal float G;
