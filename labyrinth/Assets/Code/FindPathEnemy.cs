@@ -5,15 +5,15 @@ using System.Linq;
 
 public class FindPathEnemy : MonoBehaviour
 {
-    internal Maze maze;
+    [SerializeField] private Maze maze;
     [SerializeField] private Material closedMaterial;
     [SerializeField] private Material openMaterial;
 
     List<PathMarker> open = new List<PathMarker>();
     List<PathMarker> closed = new List<PathMarker>();
 
-    //[SerializeField] private GameObject start;
-    //[SerializeField] private GameObject end;
+    [SerializeField] private GameObject start;
+    [SerializeField] private GameObject end;
     [SerializeField] private GameObject PathParent;
 
 
@@ -24,29 +24,30 @@ public class FindPathEnemy : MonoBehaviour
 
     private PathMarker lastPosition;
     private bool done = false;
-   
-    //private void RemoveAllmarkers()
-    //{
-    //    GameObject[] markers = GameObject.FindGameObjectsWithTag("marker");
 
-    //    foreach (GameObject marker in markers)
-    //    {
-    //        Destroy(marker);
-    //    }
-    //}
+    private void RemoveAllMarkers()
+    {
+        GameObject[] markers = GameObject.FindGameObjectsWithTag("marker");
+
+        foreach (GameObject marker in markers)
+        {
+            Destroy(marker);
+        }
+    }
 
     private void BeginSearch()
     {
         done = false;
-        //RemoveAllMarker();
+        RemoveAllMarkers();
+
         List<LocationOnTheMap> locations = new List<LocationOnTheMap>();
-        for (int z = 1; z < maze.height - 1; z++)
+        for (int y = 1; y < maze.height - 1; y++)
         {
             for (int x = 1; x < maze.width - 1; x++)
             {
-                if (maze.map[x, z] != 1)
+                if (maze.map[x, y] != 1)
                 {
-                    locations.Add(new LocationOnTheMap(x, z));
+                    locations.Add(new LocationOnTheMap(x, y));
                 }
             }
         }
@@ -54,10 +55,12 @@ public class FindPathEnemy : MonoBehaviour
         
 
         Vector3 startLocation = new Vector3(startObject.transform.position.x, startObject.transform.position.y, 0);
-        startNode = new PathMarker(new LocationOnTheMap((int)startObject.transform.position.x, (int)startObject.transform.position.y), 0, 0, 0, null, null);
+        startNode = new PathMarker(new LocationOnTheMap((int)startObject.transform.position.x, (int)startObject.transform.position.y), 0, 0, 0,
+            Instantiate(start, startLocation, transform.rotation * Quaternion.Euler(90f, 0, 0f)), null);
 
         Vector3 goalLocation = new Vector3(goalObject.transform.position.x, goalObject.transform.position.y, 0);
-        goalNode = new PathMarker(new LocationOnTheMap((int)goalObject.transform.position.x, (int)goalObject.transform.position.y), 0, 0, 0, null, null);
+        goalNode = new PathMarker(new LocationOnTheMap((int)goalObject.transform.position.x, (int)goalObject.transform.position.y), 0, 0, 0,
+            Instantiate(end, goalLocation, transform.rotation * Quaternion.Euler(90f, 0, 0f)), null);
 
 
         open.Clear();
@@ -77,6 +80,7 @@ public class FindPathEnemy : MonoBehaviour
         foreach (LocationOnTheMap dir in maze.directions)
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
+            Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
             if (maze.map[neighbour.x, neighbour.y] == 1)
             {
                 continue;
@@ -95,7 +99,7 @@ public class FindPathEnemy : MonoBehaviour
             float F = G + H;
 
             
-            GameObject pathBlock = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), new Vector3(neighbour.x, neighbour.y, 0), Quaternion.identity);
+            GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
             if (!UpdateMarker(neighbour, G, H, F, thisNode))
             {
                 open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
@@ -111,6 +115,11 @@ public class FindPathEnemy : MonoBehaviour
         pm.marker.GetComponent<Renderer>().material = closedMaterial;
 
         lastPosition = pm;
+
+        foreach (PathMarker o in open)
+        {
+            Debug.Log("open list x = " + o.location.x + " - " + "y= " + o.location.y);
+        }
     }
 
     private bool UpdateMarker(LocationOnTheMap position, float g, float h, float f, PathMarker parent)
