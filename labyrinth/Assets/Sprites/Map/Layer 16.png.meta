@@ -11,6 +11,78 @@ TextureImporter:
   - first:
       213: -4965556612091079018
     second: Layer 16_2
+  - first:
+      213: 2648892784624464477
+    second: Layer 16_0
+  - first:
+      213: -5565541051258025703
+    second: Layer 16_1
+  - first:
+      213: -4342438434321072789
+    second: Layer 16_2
+  - first:
+      213: -1291640184230516680
+    second: Layer 16_3
+  - first:
+      213: 2842392493087300421
+    second: Layer 16_4
+  - first:
+      213: -4764991719827983064
+    second: Layer 16_5
+  - first:
+      213: -1489744573786003420
+    second: Layer 16_6
+  - first:
+      213: -3749089210047653262
+    second: Layer 16_7
+  - first:
+      213: -8536126511448923213
+    second: Layer 16_8
+  - first:
+      213: 637047702746326847
+    second: Layer 16_9
+  - first:
+      213: 2509285020734157957
+    second: Layer 16_10
+  - first:
+      213: 907392384834430221
+    second: Layer 16_11
+  - first:
+      213: 8163899843855636634
+    second: Layer 16_12
+  - first:
+      213: 2150195844446758950
+    second: Layer 16_13
+  - first:
+      213: 5824162897043396662
+    second: Layer 16_14
+  - first:
+      213: 1686072779968037879
+    second: Layer 16_15
+  - first:
+      213: -8066818909970032071
+    second: Layer 16_16
+  - first:
+      213: -1639129820891152061
+    second: Layer 16_17
+  - first:
+      213: -964037061552933873
+    second: Layer 16_18
+  - first:
+      213: 1178567659386498660
+    second: Layer 16_19
+  - first:
+      213: -4053036072720052882
+    second: Layer 16_20
+  - first:
+      213: 4869223404784477989
+    second: Layer 16_21
+  - first:
+      213: 8307862302498264391
+    second: Layer 16_22
+  - first:
+      213: -2430575113537564175
+    second: Layer 16_23
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -113,17 +185,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 306
+        width: 308
         height: 341
-      alignment: 9
-      pivot: {x: 0, y: 1}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a28b2622febcec30800000000000000
-      internalID: 4390093684011139751
+      spriteID: d52f2a304f1c2c420800000000000000
+      internalID: 2648892784624464477
       vertices: []
       indices: 
       edges: []
@@ -132,19 +204,19 @@ TextureImporter:
       name: Layer 16_1
       rect:
         serializedVersion: 2
-        x: 306
+        x: 308
         y: 0
-        width: 306
+        width: 308
         height: 341
-      alignment: 9
-      pivot: {x: 0, y: 1}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e07c9d1ec372f29d0800000000000000
-      internalID: -2796973701133121778
+      spriteID: 91949e0c6e933c2b0800000000000000
+      internalID: -5565541051258025703
       vertices: []
       indices: 
       edges: []
@@ -153,12 +225,12 @@ TextureImporter:
       name: Layer 16_2
       rect:
         serializedVersion: 2
-        x: 612
+        x: 616
         y: 0
-        width: 306
+        width: 308
         height: 341
-      alignment: 9
-      pivot: {x: 0, y: 1}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
