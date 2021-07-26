@@ -52,7 +52,7 @@ public class FindPathEnemy : MonoBehaviour
             }
         }
 
-        
+
 
         Vector3 startLocation = new Vector3(startObject.transform.position.x, startObject.transform.position.y, 0);
         startNode = new PathMarker(new LocationOnTheMap((int)startObject.transform.position.x, (int)startObject.transform.position.y), 0, 0, 0,
@@ -81,9 +81,24 @@ public class FindPathEnemy : MonoBehaviour
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
             Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
-            if (maze.map[neighbour.x, neighbour.y] == 1)
+            //if (maze.map[neighbour.x, neighbour.y] == 1)
+            //{
+            //    continue;
+            //}
+            foreach (var pair in maze.wallObjects)
             {
-                continue;
+                //if ((float)neighbour.x == pair.Key && (float)neighbour.y == pair.Value)
+                //{
+                //    continue;
+                //}
+                //if (maze.wallIndexes.Any(k => k.Key == (float)neighbour.x) && maze.wallIndexes.Any(v => v.Key == (float)neighbour.y))
+                //{
+                //    continue;
+                //}
+                if (pair.transform.position.x == (float)neighbour.x && pair.transform.position.y == (float)neighbour.y)
+                {
+                    continue;
+                }
             }
             if (neighbour.x > 1 || neighbour.x >= maze.width || neighbour.y < 1 || neighbour.y >= maze.height)
             {
@@ -98,7 +113,7 @@ public class FindPathEnemy : MonoBehaviour
             float H = Vector2.Distance(neighbour.ToVector(), goalNode.location.ToVector());
             float F = G + H;
 
-            
+
             GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
             if (!UpdateMarker(neighbour, G, H, F, thisNode))
             {
@@ -139,7 +154,7 @@ public class FindPathEnemy : MonoBehaviour
 
         return false;
     }
-   private bool IsClosed(LocationOnTheMap marker)
+    private bool IsClosed(LocationOnTheMap marker)
     {
         foreach (PathMarker p in closed)
         {
@@ -154,7 +169,7 @@ public class FindPathEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

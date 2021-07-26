@@ -17,6 +17,10 @@ public class Maze : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private GameObject objectChecker;
 
+    //internal Dictionary<byte[,], GameObject> IndexAndGameObject;
+
+    internal List<KeyValuePair<float, float>> wallIndexes;
+    internal List<GameObject> wallObjects;
     internal int width;
     internal int height;
     internal byte[,] map;
@@ -26,17 +30,22 @@ public class Maze : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        wallIndexes = new List<KeyValuePair<float, float>>();
+        wallObjects = new List<GameObject>();
+        //IndexAndGameObject = new Dictionary<byte[,], GameObject>();
         width = (int)backGround.bounds.size.x;
         height = (int)backGround.bounds.size.y;
 
-       
+
         initialPosition = new Vector3(backGround.gameObject.transform.position.x - backGround.bounds.extents.x, backGround.gameObject.transform.position.y - backGround.bounds.extents.y, 0);
         objectChecker.transform.position = initialPosition;
-        //Debug.Log("map width = " + map.GetLength(0));
-        //Debug.Log("map height = " + map.GetLength(1));
+
         InitialiseMap();
         MarkTheGround();
         DrawMap();
+
+        Debug.Log("map width = " + map.GetLength(0));
+        Debug.Log("map height = " + map.GetLength(1));
     }
     void InitialiseMap()
     {
@@ -71,9 +80,14 @@ public class Maze : MonoBehaviour
                 {
                     Vector3 pos = new Vector3(initialPosition.x + x, initialPosition.y + y, 0);
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    
+
                     wall.transform.localScale = new Vector3(1, 1, 1);
                     wall.transform.position = pos;
+
+                    ////IndexAndGameObject.Add(new byte[x, y]);
+                    Debug.Log("x = " + pos.x + " - y = " + pos.y);
+                    wallIndexes.Add(new KeyValuePair<float, float>(pos.x, pos.y));
+                    wallObjects.Add(wall);
                 }
             }
         }
