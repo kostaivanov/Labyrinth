@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class LocationOnTheMap
 {
-    internal int x;
-    internal int y;
+    internal float x;
+    internal float y;
 
-    internal LocationOnTheMap(int x, int y)
+    internal LocationOnTheMap(float x, float y)
     {
         this.x = x;
         this.y = y;

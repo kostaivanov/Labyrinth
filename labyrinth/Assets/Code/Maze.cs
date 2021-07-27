@@ -85,7 +85,7 @@ public class Maze : MonoBehaviour
                     wall.transform.position = pos;
 
                     ////IndexAndGameObject.Add(new byte[x, y]);
-                    Debug.Log("x = " + pos.x + " - y = " + pos.y);
+                    //Debug.Log("x = " + pos.x + " - y = " + pos.y);
                     wallIndexes.Add(new KeyValuePair<float, float>(pos.x, pos.y));
                     wallObjects.Add(wall);
                 }

@@ -55,11 +55,11 @@ public class FindPathEnemy : MonoBehaviour
 
 
         Vector3 startLocation = new Vector3(startObject.transform.position.x, startObject.transform.position.y, 0);
-        startNode = new PathMarker(new LocationOnTheMap((int)startObject.transform.position.x, (int)startObject.transform.position.y), 0, 0, 0,
+        startNode = new PathMarker(new LocationOnTheMap(startObject.transform.position.x, startObject.transform.position.y), 0, 0, 0,
             Instantiate(start, startLocation, transform.rotation * Quaternion.Euler(90f, 0, 0f)), null);
 
         Vector3 goalLocation = new Vector3(goalObject.transform.position.x, goalObject.transform.position.y, 0);
-        goalNode = new PathMarker(new LocationOnTheMap((int)goalObject.transform.position.x, (int)goalObject.transform.position.y), 0, 0, 0,
+        goalNode = new PathMarker(new LocationOnTheMap(goalObject.transform.position.x, goalObject.transform.position.y), 0, 0, 0,
             Instantiate(end, goalLocation, transform.rotation * Quaternion.Euler(90f, 0, 0f)), null);
 
 
@@ -67,6 +67,8 @@ public class FindPathEnemy : MonoBehaviour
         closed.Clear();
         open.Add(startNode);
         lastPosition = startNode;
+        Debug.Log("last position x = " + lastPosition.location.x + " - last position y = " + lastPosition.location.y);
+
     }
 
     private void Search(PathMarker thisNode)
@@ -81,6 +83,9 @@ public class FindPathEnemy : MonoBehaviour
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
             Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
+            //Debug.Log("wallObjects = " + maze.wallObjects.Count);
+            //Debug.Log("maze length = " + maze.map.Length);
+
             //if (maze.map[neighbour.x, neighbour.y] == 1)
             //{
             //    continue;
@@ -95,7 +100,7 @@ public class FindPathEnemy : MonoBehaviour
                 //{
                 //    continue;
                 //}
-                if (pair.transform.position.x == (float)neighbour.x && pair.transform.position.y == (float)neighbour.y)
+                if (pair.transform.position.x == neighbour.x && pair.transform.position.y == neighbour.y)
                 {
                     continue;
                 }
