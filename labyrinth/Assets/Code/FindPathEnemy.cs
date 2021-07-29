@@ -19,6 +19,8 @@ public class FindPathEnemy : MonoBehaviour
 
     [SerializeField] private GameObject goalObject;
     [SerializeField] private GameObject startObject;
+    [SerializeField] private LayerMask wallLayer;
+
     private PathMarker startNode;
     private PathMarker goalNode;
 
@@ -67,7 +69,7 @@ public class FindPathEnemy : MonoBehaviour
         closed.Clear();
         open.Add(startNode);
         lastPosition = startNode;
-        Debug.Log("last position x = " + lastPosition.location.x + " - last position y = " + lastPosition.location.y);
+        //Debug.Log("last position x = " + lastPosition.location.x + " - last position y = " + lastPosition.location.y);
 
     }
 
@@ -82,7 +84,7 @@ public class FindPathEnemy : MonoBehaviour
         foreach (LocationOnTheMap dir in maze.directions)
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
-            Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
+            //Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
             //Debug.Log("wallObjects = " + maze.wallObjects.Count);
             //Debug.Log("maze length = " + maze.map.Length);
 
@@ -90,21 +92,32 @@ public class FindPathEnemy : MonoBehaviour
             //{
             //    continue;
             //}
-            foreach (var pair in maze.wallObjects)
+            bool colliders = Physics2D.OverlapBox(new Vector2(neighbour.x, neighbour.y), new Vector3(1, 1, 0), 90, wallLayer);
+            if (colliders == true)
             {
-                //if ((float)neighbour.x == pair.Key && (float)neighbour.y == pair.Value)
-                //{
-                //    continue;
-                //}
-                //if (maze.wallIndexes.Any(k => k.Key == (float)neighbour.x) && maze.wallIndexes.Any(v => v.Key == (float)neighbour.y))
-                //{
-                //    continue;
-                //}
-                if (pair.transform.position.x == neighbour.x && pair.transform.position.y == neighbour.y)
-                {
-                    continue;
-                }
+                Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                continue;
             }
+            //foreach (var pair in maze.wallObjects)
+            //{
+            //    //if ((float)neighbour.x == pair.Key && (float)neighbour.y == pair.Value)
+            //    //{
+            //    //    continue;
+            //    //}
+            //    //if (maze.wallIndexes.Any(k => k.Key == (float)neighbour.x) && maze.wallIndexes.Any(v => v.Key == (float)neighbour.y))
+            //    //{
+            //    //    continue;
+            //    //}
+
+               
+
+
+            //    if (colliders)
+            //    {
+            //        Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+            //        continue;                  
+            //    }
+            //}
             if (neighbour.x > 1 || neighbour.x >= maze.width || neighbour.y < 1 || neighbour.y >= maze.height)
             {
                 continue;
@@ -136,10 +149,10 @@ public class FindPathEnemy : MonoBehaviour
 
         lastPosition = pm;
 
-        foreach (PathMarker o in open)
-        {
-            Debug.Log("open list x = " + o.location.x + " - " + "y= " + o.location.y);
-        }
+        //foreach (PathMarker o in open)
+        //{
+        //    Debug.Log("open list x = " + o.location.x + " - " + "y= " + o.location.y);
+        //}
     }
 
     private bool UpdateMarker(LocationOnTheMap position, float g, float h, float f, PathMarker parent)

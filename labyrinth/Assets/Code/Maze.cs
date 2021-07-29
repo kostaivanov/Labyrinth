@@ -83,7 +83,7 @@ public class Maze : MonoBehaviour
 
                     wall.transform.localScale = new Vector3(1, 1, 1);
                     wall.transform.position = pos;
-
+                    wall.layer = 9;
                     ////IndexAndGameObject.Add(new byte[x, y]);
                     //Debug.Log("x = " + pos.x + " - y = " + pos.y);
                     wallIndexes.Add(new KeyValuePair<float, float>(pos.x, pos.y));
