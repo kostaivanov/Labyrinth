@@ -20,12 +20,14 @@ public class FindPathEnemy : MonoBehaviour
     [SerializeField] private GameObject goalObject;
     [SerializeField] private GameObject startObject;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] internal SpriteRenderer backGround;
 
     private PathMarker startNode;
     private PathMarker goalNode;
 
     private PathMarker lastPosition;
     private bool done = false;
+    private bool startMarkerToClosed = false;
 
     private void RemoveAllMarkers()
     {
@@ -40,6 +42,7 @@ public class FindPathEnemy : MonoBehaviour
     private void BeginSearch()
     {
         done = false;
+        startMarkerToClosed = false;
         RemoveAllMarkers();
 
         List<LocationOnTheMap> locations = new List<LocationOnTheMap>();
@@ -84,15 +87,15 @@ public class FindPathEnemy : MonoBehaviour
         foreach (LocationOnTheMap dir in maze.directions)
         {
             LocationOnTheMap neighbour = dir + thisNode.location;
-            //Debug.Log("x = " + neighbour.x + " - y = " + neighbour.y);
-            //Debug.Log("wallObjects = " + maze.wallObjects.Count);
-            //Debug.Log("maze length = " + maze.map.Length);
 
-            //if (maze.map[neighbour.x, neighbour.y] == 1)
+            //if (maze.map[(int)neighbour.x, (int)neighbour.y] == 1)
             //{
+            //    Debug.Log("opaaaaaaaaaaaaaaaaaaaaaaa");
             //    continue;
             //}
-            bool colliders = Physics2D.OverlapBox(new Vector2(neighbour.x, neighbour.y), new Vector3(1, 1, 0), 90, wallLayer);
+
+            bool colliders = Physics2D.OverlapBox(new Vector2(neighbour.x, neighbour.y), new Vector3(1, 1, 1), 90, wallLayer);
+            Debug.Log(colliders);
             if (colliders == true)
             {
                 Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
@@ -109,21 +112,20 @@ public class FindPathEnemy : MonoBehaviour
             //    //    continue;
             //    //}
 
-               
+            float leftCorner = backGround.transform.position.x - backGround.bounds.extents.x;
+            float rightCorner = backGround.transform.position.x + backGround.bounds.extents.x;
 
+            float topCorner = backGround.transform.position.y + backGround.bounds.extents.y;
+            float bottomCorner = backGround.transform.position.y - backGround.bounds.extents.y;
 
-            //    if (colliders)
-            //    {
-            //        Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            //        continue;                  
-            //    }
-            //}
-            if (neighbour.x > 1 || neighbour.x >= maze.width || neighbour.y < 1 || neighbour.y >= maze.height)
+            if (neighbour.x < Mathf.Round(leftCorner) || neighbour.x > Mathf.Round(rightCorner) || neighbour.y < Mathf.Round(bottomCorner) || neighbour.y > Mathf.Round(topCorner))
             {
+                Debug.Log("izlizam ot tuka we");
                 continue;
             }
             if (IsClosed(neighbour))
             {
+                Debug.Log("izlizam navun");
                 continue;
             }
 
@@ -133,10 +135,25 @@ public class FindPathEnemy : MonoBehaviour
 
 
             GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+
+            TextMesh[] values = pathBlock.GetComponentsInChildren<TextMesh>();
+            values[0].text = "G: " + G.ToString("0.00");
+            values[1].text = "H: " + H.ToString("0.00");
+            values[2].text = "F: " + F.ToString("0.00");
+
             if (!UpdateMarker(neighbour, G, H, F, thisNode))
             {
                 open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
             }
+        }
+
+        if (startMarkerToClosed == false)
+        {
+            PathMarker startMarker = (PathMarker)open.ElementAt(0);
+            open.RemoveAt(0);
+            closed.Add(startMarker);
+
+            startMarkerToClosed = true;
         }
 
         open = open.OrderBy(p => p.G).ToList<PathMarker>();

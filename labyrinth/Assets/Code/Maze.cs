@@ -105,7 +105,6 @@ public class Maze : MonoBehaviour
                 if (colliders)
                 {
                     map[x, y] = 1;
-                    Debug.Log("ima li nqkoi ?");
                 }
             }
         }
