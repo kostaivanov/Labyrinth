@@ -218,5 +218,19 @@ public class FindPathEnemy : MonoBehaviour
         {
             Search(lastPosition);
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            foreach (PathMarker item in closed)
+            {
+                Debug.Log(item.F);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            foreach (PathMarker item in open)
+            {
+                Debug.Log(item.F);
+            }
+        }
     }
 }
