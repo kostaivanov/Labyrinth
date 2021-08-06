@@ -28,6 +28,9 @@ public class FindPathEnemy : MonoBehaviour
     private PathMarker lastPosition;
     private bool done = false;
     private bool startMarkerToClosed = false;
+    [SerializeField] protected Rigidbody2D rigidBody;
+    [SerializeField] private float speed;
+
 
     private void RemoveAllMarkers()
     {
@@ -133,18 +136,24 @@ public class FindPathEnemy : MonoBehaviour
             float H = Vector2.Distance(neighbour.ToVector(), goalNode.location.ToVector());
             float F = G + H;
 
-
-            GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
-
-            TextMesh[] values = pathBlock.GetComponentsInChildren<TextMesh>();
-            values[0].text = "G: " + G.ToString("0.00");
-            values[1].text = "H: " + H.ToString("0.00");
-            values[2].text = "F: " + F.ToString("0.00");
-
-            if (!UpdateMarker(neighbour, G, H, F, thisNode))
+            if (!IfNeighbourExist(neighbour, G, H, F, thisNode))
             {
-                open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
+                GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+
+                //rigidBody.velocity = new Vector2(neighbour.x, neighbour.y, 0 * speed, rigidBody.velocity.y);
+
+                TextMesh[] values = pathBlock.GetComponentsInChildren<TextMesh>();
+                values[0].text = "G: " + G.ToString("0.00000");
+                values[1].text = "H: " + H.ToString("0.00000");
+                values[2].text = "F: " + F.ToString("0.00000");
+
+                if (!UpdateMarker(neighbour, G, H, F, thisNode))
+                {
+                    open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
+                }
             }
+
+            
         }
 
         if (startMarkerToClosed == false)
@@ -156,7 +165,7 @@ public class FindPathEnemy : MonoBehaviour
             startMarkerToClosed = true;
         }
 
-        open = open.OrderBy(p => p.G).ToList<PathMarker>();
+        open = open.OrderBy(p => p.F).ToList<PathMarker>();
         PathMarker pm = (PathMarker)open.ElementAt(0);
 
         closed.Add(pm);
@@ -189,6 +198,24 @@ public class FindPathEnemy : MonoBehaviour
 
         return false;
     }
+
+    private bool IfNeighbourExist(LocationOnTheMap position, float g, float h, float f, PathMarker parent)
+    {
+        foreach (PathMarker p in open)
+        {
+            if (p.location.Equals(position))
+            {
+                p.G = g;
+                p.H = h;
+                p.F = f;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private bool IsClosed(LocationOnTheMap marker)
     {
         foreach (PathMarker p in closed)
