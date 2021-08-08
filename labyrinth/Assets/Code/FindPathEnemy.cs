@@ -31,6 +31,11 @@ public class FindPathEnemy : MonoBehaviour
     [SerializeField] protected Rigidbody2D rigidBody;
     [SerializeField] private float speed;
 
+    private float direction_X;
+    private float direction_Y;
+
+    private bool searching;
+    private float autoSpeed = 0.05f;
 
     private void RemoveAllMarkers()
     {
@@ -68,7 +73,7 @@ public class FindPathEnemy : MonoBehaviour
 
         Vector3 goalLocation = new Vector3(goalObject.transform.position.x, goalObject.transform.position.y, 0);
         goalNode = new PathMarker(new LocationOnTheMap(goalObject.transform.position.x, goalObject.transform.position.y), 0, 0, 0,
-            Instantiate(end, goalLocation, transform.rotation * Quaternion.Euler(90f, 0, 0f)), null);
+            Instantiate(end, goalLocation, transform.rotation * Quaternion.Euler(-90f, 0, 0f)), null);
 
 
         open.Clear();
@@ -82,6 +87,13 @@ public class FindPathEnemy : MonoBehaviour
     private void Search(PathMarker thisNode)
     {
         if (thisNode.Equals(goalNode))
+        {
+            done = true;
+            return; // the goal has been found
+        }
+        float unityDistance = Vector3.Distance(thisNode.location.ToVector(), goalObject.transform.position);
+        Debug.Log("distance kva e we = " + unityDistance);
+        if (unityDistance < 2f)
         {
             done = true;
             return; // the goal has been found
@@ -140,7 +152,6 @@ public class FindPathEnemy : MonoBehaviour
             {
                 GameObject pathBlock = Instantiate(PathParent, new Vector3(neighbour.x, neighbour.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
 
-                //rigidBody.velocity = new Vector2(neighbour.x, neighbour.y, 0 * speed, rigidBody.velocity.y);
 
                 TextMesh[] values = pathBlock.GetComponentsInChildren<TextMesh>();
                 values[0].text = "G: " + G.ToString("0.00000");
@@ -175,10 +186,24 @@ public class FindPathEnemy : MonoBehaviour
 
         lastPosition = pm;
 
-        //foreach (PathMarker o in open)
-        //{
-        //    Debug.Log("open list x = " + o.location.x + " - " + "y= " + o.location.y);
-        //}
+        if (lastPosition.location.x < startObject.transform.position.x)
+        {
+            direction_X = -1f;
+        }
+        if (lastPosition.location.x > startObject.transform.position.x)
+        {
+            direction_X = 1f;
+        }
+        if (lastPosition.location.y < startObject.transform.position.y)
+        {
+            direction_Y = 1f;
+        }
+        if (lastPosition.location.y > startObject.transform.position.y)
+        {
+            direction_Y = -1f;
+        }
+
+        //rigidBody.velocity = new Vector2(direction_X * speed, rigidBody.velocity.y);
     }
 
     private bool UpdateMarker(LocationOnTheMap position, float g, float h, float f, PathMarker parent)
@@ -228,22 +253,87 @@ public class FindPathEnemy : MonoBehaviour
 
         return false;
     }
+    private void GetPath()
+    {
+        RemoveAllMarkers();
+        PathMarker begin = lastPosition;
+        while (!startNode.Equals(begin) && begin != null)
+        {
+            Instantiate(PathParent, new Vector3(begin.location.x, begin.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+            begin = begin.parent;
+        }
+
+        Instantiate(PathParent, new Vector3(startNode.location.x, startNode.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+    }
+
+    //private float CalculateDistance(PathMarker lastPosition)
+    //{
+    //    Vector3 pPos = goalObject.transform.position;
+    //    Vector3 rPos = new Vector2(lastPosition.location.x, lastPosition.location.y);
+
+    //    float distance = Mathf.Sqrt(
+    //                        Mathf.Pow(rPos.x - pPos.x, 2) + Mathf.Pow(rPos.y - pPos.y, 2) + Mathf.Pow(rPos.z - pPos.z, 2));
+
+    //    float unityDistance = Vector3.Distance(pPos, rPos);
+    //    Debug.Log(distance);
+    //    return distance;
+    //}
+
     // Start is called before the first frame update
     void Start()
     {
+        searching = false;
+    }
+    private Vector3 Cross(Vector3 v, Vector3 w)
+    {
+        float xMult = v.y * w.z - v.z * w.y;
+        float yMult = v.z * w.x - v.x * w.z;
+        float zMult = v.x * w.y - v.y * w.x;
 
+        Vector3 crossProd = new Vector3(xMult, yMult, zMult);
+        return crossProd;
+    }
+
+    private void CalculateAngle()
+    {
+        Vector3 pFrwd = startObject.transform.up;
+        Vector3 rDir = goalObject.transform.position - startObject.transform.position;
+
+        float dot = pFrwd.x * rDir.x + pFrwd.y * rDir.y;
+        float angle = Mathf.Acos(dot / (pFrwd.magnitude * rDir.magnitude));
+
+        //Debug.Log("Angle: " + angle * Mathf.Rad2Deg);
+        //Debug.Log("Unity angle: " + Vector3.Angle(pFrwd, rDir));
+
+        //Debug.DrawRay(this.transform.position, pFrwd * 15, Color.green, 2);
+        //Debug.DrawRay(this.transform.position, rDir, Color.red, 2);
+
+        int clockWise = 1;
+        if (Cross(pFrwd, rDir).z < 0)
+        {
+            clockWise = -1;
+        }
+
+        //Unity calculation on the angle
+        float unityAngle = Vector3.SignedAngle(pFrwd, rDir, startObject.transform.forward);
+        //Debug.Log("forward: " + this.transform.forward);
+
+        startObject.transform.Rotate(0, 0, unityAngle * 0.02f);
+
+        //this.transform.Rotate(0, 0, angle * Mathf.Rad2Deg * clockWise);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             BeginSearch();
         }
         if (Input.GetKeyDown(KeyCode.S) && !done)
         {
-            Search(lastPosition);
+            searching = true;
+
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -258,6 +348,22 @@ public class FindPathEnemy : MonoBehaviour
             {
                 Debug.Log(item.F);
             }
+        }
+
+        if (searching == true)
+        {
+            Search(lastPosition);
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            GetPath();
+        }
+
+        if (done == true)
+        {
+            CalculateAngle();
+            startObject.transform.Translate(startObject.transform.up * autoSpeed, Space.World);
         }
     }
 }
