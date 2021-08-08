@@ -30,6 +30,12 @@ public class FindPathEnemy : MonoBehaviour
     private bool startMarkerToClosed = false;
     [SerializeField] protected Rigidbody2D rigidBody;
     [SerializeField] private float speed;
+    public GameObject[] waypoints;
+    int currentWP = 0;
+    public float speedTracker = 1f;
+    public float rotationSpeed = 2f;
+    public float lookAhead = 0.01f;
+    private GameObject tracker;
 
     private float direction_X;
     private float direction_Y;
@@ -283,6 +289,12 @@ public class FindPathEnemy : MonoBehaviour
     void Start()
     {
         searching = false;
+
+        tracker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        DestroyImmediate(tracker.GetComponent<Collider2D>());
+        tracker.GetComponent<MeshRenderer>().enabled = false;
+        tracker.transform.position = this.transform.position;
+        tracker.transform.rotation = this.transform.rotation;
     }
     private Vector3 Cross(Vector3 v, Vector3 w)
     {
