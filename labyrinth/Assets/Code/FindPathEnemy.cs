@@ -30,10 +30,12 @@ public class FindPathEnemy : MonoBehaviour
     private bool startMarkerToClosed = false;
     [SerializeField] protected Rigidbody2D rigidBody;
     [SerializeField] private float speed;
-    public GameObject[] waypoints;
+
+    public List<GameObject> waypoints;
     int currentWP = 0;
     public float speedTracker = 1f;
     public float rotationSpeed = 2f;
+
     public float lookAhead = 0.01f;
     private GameObject tracker;
 
@@ -98,7 +100,7 @@ public class FindPathEnemy : MonoBehaviour
             return; // the goal has been found
         }
         float unityDistance = Vector3.Distance(thisNode.location.ToVector(), goalObject.transform.position);
-        Debug.Log("distance kva e we = " + unityDistance);
+        //Debug.Log("distance kva e we = " + unityDistance);
         if (unityDistance < 2f)
         {
             done = true;
@@ -116,10 +118,10 @@ public class FindPathEnemy : MonoBehaviour
             //}
 
             bool colliders = Physics2D.OverlapBox(new Vector2(neighbour.x, neighbour.y), new Vector3(1, 1, 1), 90, wallLayer);
-            Debug.Log(colliders);
+            //Debug.Log(colliders);
             if (colliders == true)
             {
-                Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                //Debug.Log("xaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 continue;
             }
             //foreach (var pair in maze.wallObjects)
@@ -141,12 +143,12 @@ public class FindPathEnemy : MonoBehaviour
 
             if (neighbour.x < Mathf.Round(leftCorner) || neighbour.x > Mathf.Round(rightCorner) || neighbour.y < Mathf.Round(bottomCorner) || neighbour.y > Mathf.Round(topCorner))
             {
-                Debug.Log("izlizam ot tuka we");
+                //Debug.Log("izlizam ot tuka we");
                 continue;
             }
             if (IsClosed(neighbour))
             {
-                Debug.Log("izlizam navun");
+                //Debug.Log("izlizam navun");
                 continue;
             }
 
@@ -269,7 +271,8 @@ public class FindPathEnemy : MonoBehaviour
             begin = begin.parent;
         }
 
-        Instantiate(PathParent, new Vector3(startNode.location.x, startNode.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+        GameObject pathObject = Instantiate(PathParent, new Vector3(startNode.location.x, startNode.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+        waypoints.Add(pathObject);
     }
 
     //private float CalculateDistance(PathMarker lastPosition)
@@ -289,6 +292,7 @@ public class FindPathEnemy : MonoBehaviour
     void Start()
     {
         searching = false;
+        waypoints = new List<GameObject>();
 
         tracker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         DestroyImmediate(tracker.GetComponent<Collider2D>());
@@ -334,6 +338,27 @@ public class FindPathEnemy : MonoBehaviour
 
         //this.transform.Rotate(0, 0, angle * Mathf.Rad2Deg * clockWise);
     }
+    private void ProgressTracker()
+    {
+        if (Vector3.Distance(tracker.transform.position, startObject.transform.position) > lookAhead)
+        {
+            return;
+        }
+
+        if (Vector3.Distance(tracker.transform.position, waypoints[currentWP].transform.position) < 0.5)
+        {
+            currentWP++;
+        }
+
+        if (currentWP >= waypoints.Count)
+        {
+            done = false;
+            currentWP = 0;
+        }
+
+        tracker.transform.LookAt(waypoints[currentWP].transform);
+        tracker.transform.Translate(0, 0, (speed + 0.5f) * Time.deltaTime);
+    }
 
     // Update is called once per frame
     void Update()
@@ -372,10 +397,24 @@ public class FindPathEnemy : MonoBehaviour
             GetPath();
         }
 
-        if (done == true)
+        if (done == true && waypoints.Count > 0)
         {
-            CalculateAngle();
-            startObject.transform.Translate(startObject.transform.up * autoSpeed, Space.World);
+            //CalculateAngle();
+            Debug.Log("waypoints bro = " + waypoints.Count);
+            //startObject.transform.Translate(startObject.transform.up * autoSpeed, Space.World);
+            ProgressTracker();
+
+            Vector3 myLocation = startObject.transform.position;
+            Vector3 targetLocation = waypoints[currentWP].transform.position;
+
+            Vector3 direction = (tracker.transform.position - startObject.transform.position);
+
+            Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * direction;
+            Quaternion targetRotation = Quaternion.LookRotation(forward: Vector3.forward, upwards: rotatedVectorToTarget);
+
+            startObject.transform.rotation = Quaternion.Slerp(startObject.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            startObject.transform.Translate(speed * Time.deltaTime, 0, 0);
         }
     }
 }
