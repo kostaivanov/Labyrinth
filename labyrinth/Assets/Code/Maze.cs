@@ -44,8 +44,8 @@ public class Maze : MonoBehaviour
         MarkTheGround();
         DrawMap();
 
-        Debug.Log("map width = " + map.GetLength(0));
-        Debug.Log("map height = " + map.GetLength(1));
+        //Debug.Log("map width = " + map.GetLength(0));
+        //Debug.Log("map height = " + map.GetLength(1));
     }
     void InitialiseMap()
     {

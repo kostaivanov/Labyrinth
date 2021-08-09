@@ -36,7 +36,7 @@ public class FindPathEnemy : MonoBehaviour
     public float speedTracker = 1f;
     public float rotationSpeed = 2f;
 
-    public float lookAhead = 0.01f;
+    public float lookAhead = 1f;
     private GameObject tracker;
 
     private float direction_X;
@@ -44,6 +44,20 @@ public class FindPathEnemy : MonoBehaviour
 
     private bool searching;
     private float autoSpeed = 0.05f;
+    private bool f_Pushed;
+
+    void Start()
+    {
+        searching = false;
+        waypoints = new List<GameObject>();
+
+        tracker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        DestroyImmediate(tracker.GetComponent<Collider2D>());
+        tracker.GetComponent<MeshRenderer>().enabled = false;
+        tracker.transform.position = startObject.transform.position;
+        tracker.transform.rotation = startObject.transform.rotation;
+        f_Pushed = false;
+    }
 
     private void RemoveAllMarkers()
     {
@@ -267,12 +281,14 @@ public class FindPathEnemy : MonoBehaviour
         PathMarker begin = lastPosition;
         while (!startNode.Equals(begin) && begin != null)
         {
-            Instantiate(PathParent, new Vector3(begin.location.x, begin.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+            GameObject pathObject_1 = Instantiate(PathParent, new Vector3(begin.location.x, begin.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
             begin = begin.parent;
+            waypoints.Add(pathObject_1);
         }
 
-        GameObject pathObject = Instantiate(PathParent, new Vector3(startNode.location.x, startNode.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
-        waypoints.Add(pathObject);
+        GameObject pathObject_2 = Instantiate(PathParent, new Vector3(startNode.location.x, startNode.location.y, 0), transform.rotation * Quaternion.Euler(90f, 0, 0f));
+        waypoints.Add(pathObject_2);
+        currentWP = waypoints.Count - 1;
     }
 
     //private float CalculateDistance(PathMarker lastPosition)
@@ -289,17 +305,7 @@ public class FindPathEnemy : MonoBehaviour
     //}
 
     // Start is called before the first frame update
-    void Start()
-    {
-        searching = false;
-        waypoints = new List<GameObject>();
-
-        tracker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        DestroyImmediate(tracker.GetComponent<Collider2D>());
-        tracker.GetComponent<MeshRenderer>().enabled = false;
-        tracker.transform.position = this.transform.position;
-        tracker.transform.rotation = this.transform.rotation;
-    }
+  
     private Vector3 Cross(Vector3 v, Vector3 w)
     {
         float xMult = v.y * w.z - v.z * w.y;
@@ -340,29 +346,35 @@ public class FindPathEnemy : MonoBehaviour
     }
     private void ProgressTracker()
     {
-        if (Vector3.Distance(tracker.transform.position, startObject.transform.position) > lookAhead)
+        if (Vector3.Distance(tracker.transform.position, startObject.transform.position) > 2f)
         {
+            float dis = Vector3.Distance(tracker.transform.position, startObject.transform.position);
+            //Debug.Log(dis);
             return;
         }
 
-        if (Vector3.Distance(tracker.transform.position, waypoints[currentWP].transform.position) < 0.5)
+        if (Vector3.Distance(tracker.transform.position, waypoints[currentWP].transform.position) < 0.5f)
         {
-            currentWP++;
+            currentWP--;
+            Debug.Log(" ko ?");
+
         }
 
         if (currentWP >= waypoints.Count)
         {
             done = false;
-            currentWP = 0;
+            currentWP = waypoints.Count - 1;
+            Debug.Log(" aha ?");
         }
-
-        tracker.transform.LookAt(waypoints[currentWP].transform);
+        Debug.Log(" chuchuuuu ?");
+        tracker.transform.LookAt(waypoints[currentWP].transform, Vector3.forward);
         tracker.transform.Translate(0, 0, (speed + 0.5f) * Time.deltaTime);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("current waypoint = " + currentWP);
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             BeginSearch();
@@ -396,14 +408,29 @@ public class FindPathEnemy : MonoBehaviour
         {
             GetPath();
         }
+        if (Input.GetKeyDown(KeyCode.F) && f_Pushed == false)
+        {
+            f_Pushed = true;
+        }
+        
 
-        if (done == true && waypoints.Count > 0)
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("waypoints bro = " + waypoints.Count);
+            foreach (GameObject item in waypoints)
+            {
+                Debug.Log(item.transform.position);
+            }
+        }
+
+
+        if (f_Pushed == true && done == true && waypoints.Count > 0)
         {
             //CalculateAngle();
-            Debug.Log("waypoints bro = " + waypoints.Count);
+            //Debug.Log("waypoints bro = " + waypoints.Count);
             //startObject.transform.Translate(startObject.transform.up * autoSpeed, Space.World);
             ProgressTracker();
-
+            Debug.Log("bbbb ?");
             Vector3 myLocation = startObject.transform.position;
             Vector3 targetLocation = waypoints[currentWP].transform.position;
 
