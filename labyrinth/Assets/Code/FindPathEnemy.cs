@@ -46,6 +46,7 @@ public class FindPathEnemy : MonoBehaviour
     private float autoSpeed = 0.05f;
     private bool f_Pushed;
 
+    // Start is called before the first frame update
     void Start()
     {
         searching = false;
@@ -291,20 +292,6 @@ public class FindPathEnemy : MonoBehaviour
         currentWP = waypoints.Count - 1;
     }
 
-    //private float CalculateDistance(PathMarker lastPosition)
-    //{
-    //    Vector3 pPos = goalObject.transform.position;
-    //    Vector3 rPos = new Vector2(lastPosition.location.x, lastPosition.location.y);
-
-    //    float distance = Mathf.Sqrt(
-    //                        Mathf.Pow(rPos.x - pPos.x, 2) + Mathf.Pow(rPos.y - pPos.y, 2) + Mathf.Pow(rPos.z - pPos.z, 2));
-
-    //    float unityDistance = Vector3.Distance(pPos, rPos);
-    //    Debug.Log(distance);
-    //    return distance;
-    //}
-
-    // Start is called before the first frame update
   
     private Vector3 Cross(Vector3 v, Vector3 w)
     {
@@ -346,35 +333,30 @@ public class FindPathEnemy : MonoBehaviour
     }
     private void ProgressTracker()
     {
-        if (Vector3.Distance(tracker.transform.position, startObject.transform.position) > 2f)
+        if (Vector3.Distance(tracker.transform.position, startObject.transform.position) > 1.5f)
         {
-            float dis = Vector3.Distance(tracker.transform.position, startObject.transform.position);
-            //Debug.Log(dis);
+            //float dis = Vector3.Distance(tracker.transform.position, startObject.transform.position);
             return;
         }
 
-        if (Vector3.Distance(tracker.transform.position, waypoints[currentWP].transform.position) < 0.5f)
+        if (Vector3.Distance(tracker.transform.position, waypoints[currentWP].transform.position) < 0.25f)
         {
             currentWP--;
-            Debug.Log(" ko ?");
-
         }
 
-        if (currentWP >= waypoints.Count)
+        if (currentWP == 0)
         {
             done = false;
             currentWP = waypoints.Count - 1;
-            Debug.Log(" aha ?");
         }
-        Debug.Log(" chuchuuuu ?");
-        tracker.transform.LookAt(waypoints[currentWP].transform, Vector3.forward);
+        tracker.transform.LookAt(waypoints[currentWP].transform);
         tracker.transform.Translate(0, 0, (speed + 0.5f) * Time.deltaTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("current waypoint = " + currentWP);
+        //Debug.Log("current waypoint = " + currentWP);
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             BeginSearch();
@@ -427,7 +409,6 @@ public class FindPathEnemy : MonoBehaviour
         if (f_Pushed == true && done == true && waypoints.Count > 0)
         {
             //CalculateAngle();
-            //Debug.Log("waypoints bro = " + waypoints.Count);
             //startObject.transform.Translate(startObject.transform.up * autoSpeed, Space.World);
             ProgressTracker();
             Debug.Log("bbbb ?");
@@ -436,12 +417,23 @@ public class FindPathEnemy : MonoBehaviour
 
             Vector3 direction = (tracker.transform.position - startObject.transform.position);
 
+
+
             Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * direction;
             Quaternion targetRotation = Quaternion.LookRotation(forward: Vector3.forward, upwards: rotatedVectorToTarget);
 
             startObject.transform.rotation = Quaternion.Slerp(startObject.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
             startObject.transform.Translate(speed * Time.deltaTime, 0, 0);
+
+            Debug.DrawRay(startObject.transform.position, direction, Color.red);
+            Debug.DrawRay(startObject.transform.position, rotatedVectorToTarget, Color.green);
+            Debug.Log("The quaternion -  " + targetRotation);
+            Debug.Log("Green Y, Upwards vector " + rotatedVectorToTarget);
+            Debug.Log("Direction X, to target vector " + direction);
+            Debug.Log("Forward vector " + Vector3.forward);
+            Debug.DrawRay(startObject.transform.position, Vector3.up * 5, Color.yellow);
+            Debug.DrawRay(startObject.transform.position, Vector3.forward * 5, Color.white);
         }
     }
 }
