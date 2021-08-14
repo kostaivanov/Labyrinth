@@ -22,14 +22,14 @@ internal class PlayerMovement : PlayerComponents
     private bool moving;
     private bool jumpPressed;
     private bool isJumping;
-
+    private bool jumpHolded;
     private float direction;
 
     private bool canMove;
 
-    public float fallMultiplier;
-    public float lowJumpMultiplier;
 
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
 
     public bool CanMove
     {
@@ -49,8 +49,6 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(CheckIfGrounded() + " - bqgame weeeeeeeeeeeeeeeee = " );
-
         if (Input.GetAxisRaw("Horizontal") != 0 && CanMove == true)
         {
             direction = FindDirection();
@@ -61,32 +59,27 @@ internal class PlayerMovement : PlayerComponents
             moving = false;
         }
 
-        if (Input.GetButtonDown("Jump") == true && !jumpPressed)
+        if (Input.GetButtonDown("Jump"))
         {
             jumpPressed = true;
-        }
-        //else if (Input.GetKey("Jump"))
-        //{
-        //    jumpPressed = false;
-        //}
+            jumpHolded = true;
 
-        //else if (Input.GetButtonUp("Jump"))
-        //{
-        //    jumpPressed = false;
-        //}
+        }
+        else if (Input.GetButtonUp("Jump"))
+        {
+            jumpHolded = false;
+        }
 
         if (rigidBody.velocity.y < 0)
         {
-            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier) * Time.deltaTime;
-            Debug.Log("padaaaaaaam");
+            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
+        else if(rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
         {
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
-            Debug.Log("skachaaaaam");
         }
     }
-  
+
     private void FixedUpdate()
     {
 
@@ -112,12 +105,19 @@ internal class PlayerMovement : PlayerComponents
             Jump();
             //jumpPressed = false;
         }
+        if (!CheckIfGrounded())
+        {
+            //isJumping = false;
+            jumpPressed = false;
+
+        }
 
         if (isJumping)
         {
-            if (!jumpPressed && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
+            if (!jumpHolded && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
             {
-                rigidBody.AddForce(counterJumpForce * rigidBody.mass * 20.0f, ForceMode2D.Impulse);
+                rigidBody.AddForce(counterJumpForce * rigidBody.mass, ForceMode2D.Impulse);
+                Debug.Log("aplying antiforce");
             }
         }
     }
@@ -136,17 +136,12 @@ internal class PlayerMovement : PlayerComponents
             isJumping = true;
 
             jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
-            Debug.Log("jumpforce = " + jumpForce_2);
+
             //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
             rigidBody.AddForce(Vector2.up * jumpForce_2 * rigidBody.mass, ForceMode2D.Impulse);
-            //rigidBody.velocity = (Vector2.up * jumpForce);
-            //jumpPressed = true;
 
         }
-        else
-        {
-            jumpPressed = false;
-        }
+       
     }
 
     private void LateUpdate()
@@ -170,7 +165,7 @@ internal class PlayerMovement : PlayerComponents
 
     protected void AnimationStateSwitch()
     {
-        
+
         if (rigidBody.velocity.y > 1f && CheckIfGrounded() != true)
         {
             this.state = PlayerState.jumping;
@@ -179,7 +174,7 @@ internal class PlayerMovement : PlayerComponents
 
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Falling") && state == PlayerState.falling && collider2D.IsTouchingLayers(groundLayer))
         {
-            state = PlayerState.landing;            
+            state = PlayerState.landing;
         }
 
         else if (state == PlayerState.jumping)
@@ -211,7 +206,7 @@ internal class PlayerMovement : PlayerComponents
             }
         }
         //&& Mathf.Abs(rigidBody.velocity.x) > minimumVelocity_X
-        else if (moving  && CheckIfGrounded())
+        else if (moving && CheckIfGrounded())
         {
             state = PlayerState.moving;
             //Debug.Log(PlayerState.moving + " - bqgame");
