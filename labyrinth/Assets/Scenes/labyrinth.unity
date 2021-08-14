@@ -741,7 +741,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  jumpForce: 70
+  jumpForce: 60
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
 --- !u!1 &92174717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,7 +1492,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249510391}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26.475021, y: 8.800001, z: -10}
+  m_LocalPosition: {x: -27.20296, y: 8.800001, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1395211056}
@@ -1683,7 +1685,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266715238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26.475021, y: 8.8, z: -10}
+  m_LocalPosition: {x: -27.20296, y: 8.8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1309666872}
@@ -1873,23 +1875,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad980451443d70438faac0bc6c235a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LookaheadTime: 0.251
-  m_LookaheadSmoothing: 13.66
-  m_LookaheadIgnoreY: 1
-  m_XDamping: 0.25
+  m_LookaheadTime: 0.052
+  m_LookaheadSmoothing: 30
+  m_LookaheadIgnoreY: 0
+  m_XDamping: 20
   m_YDamping: 0.55
   m_ZDamping: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.729594
   m_CameraDistance: 10
-  m_DeadZoneWidth: 0.03404167
-  m_DeadZoneHeight: 0.07056221
+  m_DeadZoneWidth: 0
+  m_DeadZoneHeight: 0.121
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 1.219
+  m_SoftZoneWidth: 0.018
   m_SoftZoneHeight: 0.3927484
-  m_BiasX: -0.01799998
-  m_BiasY: -0.000001110004
+  m_BiasX: 0.4999969
+  m_BiasY: -0.0000008773505
   m_CenterOnActivate: 1
   m_GroupFramingMode: 2
   m_AdjustmentMode: 2
@@ -6589,6 +6591,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   jumpForce: 80
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
 --- !u!50 &1070416332
 Rigidbody2D:
   serializedVersion: 4
@@ -12094,7 +12098,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789698733}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.56345, y: 8.8, z: -10}
+  m_LocalPosition: {x: -28.099312, y: 8.8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 892215392}

@@ -27,6 +27,10 @@ internal class PlayerMovement : PlayerComponents
 
     private bool canMove;
 
+    public float fallMultiplier;
+    public float lowJumpMultiplier;
+
+
     public bool CanMove
     {
         get { return canMove; }
@@ -57,13 +61,29 @@ internal class PlayerMovement : PlayerComponents
             moving = false;
         }
 
-        if (Input.GetAxisRaw("Jump") > 0)
+        if (Input.GetButtonDown("Jump") == true && !jumpPressed)
         {
             jumpPressed = true;
         }
-        else if (Input.GetButtonUp("Jump"))
+        //else if (Input.GetKey("Jump"))
+        //{
+        //    jumpPressed = false;
+        //}
+
+        //else if (Input.GetButtonUp("Jump"))
+        //{
+        //    jumpPressed = false;
+        //}
+
+        if (rigidBody.velocity.y < 0)
         {
-            jumpPressed = false;
+            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier) * Time.deltaTime;
+            Debug.Log("padaaaaaaam");
+        }
+        else if (rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
+        {
+            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+            Debug.Log("skachaaaaam");
         }
     }
   
@@ -115,11 +135,17 @@ internal class PlayerMovement : PlayerComponents
         {
             isJumping = true;
 
-            jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, 90.0f);
-
+            jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
+            Debug.Log("jumpforce = " + jumpForce_2);
             //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
             rigidBody.AddForce(Vector2.up * jumpForce_2 * rigidBody.mass, ForceMode2D.Impulse);
+            //rigidBody.velocity = (Vector2.up * jumpForce);
+            //jumpPressed = true;
 
+        }
+        else
+        {
+            jumpPressed = false;
         }
     }
 
