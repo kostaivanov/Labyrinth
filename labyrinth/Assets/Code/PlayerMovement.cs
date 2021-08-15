@@ -26,10 +26,17 @@ internal class PlayerMovement : PlayerComponents
     private float direction;
 
     private bool canMove;
-
+    [SerializeField] private float decayRate;
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
+
+    private bool coroutineApplied;
+
+    public float StandartJumpForce;
+    public float MaxJumpForce;
+    private float jumpForce_3;
+
 
     public bool CanMove
     {
@@ -44,6 +51,8 @@ internal class PlayerMovement : PlayerComponents
         moving = false;
         jumpPressed = false;
         CanMove = true;
+
+        coroutineApplied = false;
     }
 
     // Update is called once per frame
@@ -59,30 +68,48 @@ internal class PlayerMovement : PlayerComponents
             moving = false;
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && CheckIfGrounded())
         {
             jumpPressed = true;
             jumpHolded = true;
+            jumpForce_3 = MaxJumpForce;
 
         }
         else if (Input.GetButtonUp("Jump"))
         {
             jumpHolded = false;
-        }
+            jumpForce_3 = StandartJumpForce;
 
-        if (rigidBody.velocity.y < 0)
-        {
-            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if(rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
-        {
-            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
-        }
+        ClampVelocityY();
+        //if (!CheckIfGrounded() && !jumpPressed)
+        //{
+        //    StartCoroutine(ApplyCounterForce());
+        //}
+
+        //if (rigidBody.velocity.y < 0)
+        //{
+        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        //}
+        //else if(rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
+        //{
+        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        //}
+    }
+
+
+
+    public void ClampVelocityY()
+    {
+        float maxVelocityY = 2;
+        Vector2 velocity = rigidBody.velocity;
+        velocity.y = Mathf.Clamp(velocity.y, Mathf.NegativeInfinity, maxVelocityY);
+        rigidBody.velocity = velocity;
+        Debug.Log("dasdasdas");
     }
 
     private void FixedUpdate()
     {
-
         if (moving == true)
         {
             //rigidBody.MovePosition(rigidBody.position + new Vector2(direction * speed, 0) * Time.deltaTime);
@@ -102,8 +129,10 @@ internal class PlayerMovement : PlayerComponents
 
         if (jumpPressed == true)
         {
-            Jump();
-            //jumpPressed = false;
+            //Jump();
+            StartCoroutine(DoJump());
+
+            jumpPressed = false;
         }
         if (!CheckIfGrounded())
         {
@@ -112,14 +141,13 @@ internal class PlayerMovement : PlayerComponents
 
         }
 
-        if (isJumping)
+        //if (isJumping)
+        //{
+        if (!jumpHolded && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
         {
-            if (!jumpHolded && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
-            {
-                rigidBody.AddForce(counterJumpForce * rigidBody.mass, ForceMode2D.Impulse);
-                Debug.Log("aplying antiforce");
-            }
+            //rigidBody.AddForce(counterJumpForce * rigidBody.mass * 10f, ForceMode2D.Impulse); 
         }
+        //}
     }
     public static float CalculateJumpForce(float gravityStrength, float jumpHeight)
     {
@@ -133,15 +161,50 @@ internal class PlayerMovement : PlayerComponents
     {
         if (CheckIfGrounded())
         {
-            isJumping = true;
+            //isJumping = true;
 
             jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
 
             //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
             rigidBody.AddForce(Vector2.up * jumpForce_2 * rigidBody.mass, ForceMode2D.Impulse);
-
         }
-       
+
+    }
+
+    IEnumerator DoJump()
+    {
+        //the initial jump
+        rigidBody.AddForce(Vector2.up * jumpForce * rigidBody.mass, ForceMode2D.Impulse);
+        yield return null;
+
+        //can be any value, maybe this is a start ascending force, up to you
+        float currentForce = jumpForce * 2;
+
+        while (Input.GetKey(KeyCode.Space) && currentForce > 0)
+        {
+            rigidBody.AddForce(Vector2.up * currentForce, ForceMode2D.Impulse);
+            currentForce -= decayRate * Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator ApplyCounterForce()
+    {
+        //&& Vector2.Dot(rigidBody.velocity, Vector2.up) > 0
+        while (!CheckIfGrounded())
+        {
+            //Debug.Log("counterforce ?");
+            if (!jumpHolded && rigidBody.velocity.y > 0)
+            {
+                Debug.Log("counterforce ?");
+                //rigidBody.velocity += Vector2.down * 20f * Time.deltaTime;
+                rigidBody.AddForce(Vector2.down * rigidBody.mass * 4f, ForceMode2D.Impulse);
+            }
+
+            yield return null;
+        }
+
+        Debug.Log("does this end ?");
     }
 
     private void LateUpdate()
