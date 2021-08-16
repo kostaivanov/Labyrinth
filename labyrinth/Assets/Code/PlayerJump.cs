@@ -4,69 +4,63 @@ using UnityEngine;
 
 internal class PlayerJump : PlayerComponents
 {
-    [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private float decayRate;
+
     private float jumpForce_2;
     Vector2 counterJumpForce = Vector2.down;
 
 
     private float extrHeightText = 0.1f;
 
-    private bool moving;
     private bool jumpPressed;
-    private bool isJumping;
     private bool jumpHolded;
-    public float StandartJumpForce;
-    public float MaxJumpForce;
+    //public float StandartJumpForce;
+    //public float MaxJumpForce;
     private float jumpForce_3;
 
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+
+
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        
+        base.Start();
+        jumpPressed = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetButtonDown("Jump") && CheckIfGrounded())
         {
             jumpPressed = true;
             jumpHolded = true;
-            jumpForce_3 = MaxJumpForce;
+            //jumpForce_3 = MaxJumpForce;
 
         }
         else if (Input.GetButtonUp("Jump"))
         {
             jumpHolded = false;
-            jumpForce_3 = StandartJumpForce;
+            //jumpForce_3 = StandartJumpForce;
 
         }
-
-        //if (CheckIfGrounded())
-        //    rigidBody.velocity.y = Mathf.Min(0, rigidBody.velocity.y) - Physics2D.gravity.magnitude * Time.deltaTime;
-        //else
+        //ClampVelocityY();
+        //if (!CheckIfGrounded() && !jumpPressed)
         //{
-        //    rigidBody.velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
-
-        //    // When jumping up we don't apply gravity for some time when the user is holding the jump button.
-        //    // This gives more control over jump height by pressing the button longer.
-        //    if (jumping.jumping && jumping.holdingJumpButton)
-        //    {
-        //        // Calculate the duration that the extra jump force should have effect.
-        //        // If we're still less than that duration after the jumping time, apply the force.
-        //        if (Time.time < jumping.lastStartTime + jumping.extraHeight / CalculateJumpVerticalSpeed(jumping.baseHeight))
-        //        {
-        //            // Negate the gravity we just applied, except we push in jumpDir rather than jump upwards.
-        //            velocity += jumping.jumpDir * movement.gravity * Time.deltaTime;
-        //        }
-        //    }
-
-        //    // Make sure we don't fall any faster than maxFallSpeed. This gives our character a terminal velocity.
-        //    rigidBody.velocity.y = Mathf.Max(rigidBody.velocity.y, -movement.maxFallSpeed);
+        //    StartCoroutine(ApplyCounterForce());
         //}
 
-        ClampVelocityY();
+        //if (rigidBody.velocity.y < 0)
+        //{
+        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        //}
+        //else if(rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
+        //{
+        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        //}
     }
 
     private void FixedUpdate()
@@ -74,15 +68,22 @@ internal class PlayerJump : PlayerComponents
         if (jumpPressed == true)
         {
             //Jump();
+            StartCoroutine(DoJump());
 
             jumpPressed = false;
         }
         if (!CheckIfGrounded())
         {
-            //isJumping = false;
             jumpPressed = false;
 
         }
+
+
+        if (!jumpHolded && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
+        {
+            //rigidBody.AddForce(counterJumpForce * rigidBody.mass * 10f, ForceMode2D.Impulse); 
+        }
+
     }
 
     public void ClampVelocityY()
@@ -101,12 +102,55 @@ internal class PlayerJump : PlayerComponents
         return rayCastHit.collider != null;
     }
 
+    public static float CalculateJumpForce(float gravityStrength, float jumpHeight)
+    {
+        //h = v^2/2g
+        //2gh = v^2
+        //sqrt(2gh) = v
+        return Mathf.Sqrt(2 * gravityStrength * jumpHeight);
+    }
+
+    IEnumerator DoJump()
+    {
+        jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
+        //the initial jump
+        Debug.Log(jumpForce_2);
+        rigidBody.AddForce(Vector2.up * (jumpForce_2 * 2) * rigidBody.mass);
+        yield return null;
+
+        //can be any value, maybe this is a start ascending force, up to you
+        float currentForce = jumpForce_2;
+
+        while (Input.GetKey(KeyCode.Space) && currentForce > 0)
+        {
+            rigidBody.AddForce(Vector2.up * currentForce * rigidBody.mass);
+            currentForce -= decayRate * Time.fixedDeltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator ApplyCounterForce()
+    {
+        //&& Vector2.Dot(rigidBody.velocity, Vector2.up) > 0
+        while (!CheckIfGrounded())
+        {
+            //Debug.Log("counterforce ?");
+            if (!jumpHolded && rigidBody.velocity.y > 0)
+            {
+                Debug.Log("counterforce ?");
+                //rigidBody.velocity += Vector2.down * 20f * Time.deltaTime;
+                rigidBody.AddForce(Vector2.down * rigidBody.mass * 4f, ForceMode2D.Impulse);
+            }
+
+            yield return null;
+        }
+
+        Debug.Log("does this end ?");
+    }
     private void Jump()
     {
         if (CheckIfGrounded())
         {
-            //isJumping = true;
-
             jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
 
             //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
