@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 internal class PlayerJump : PlayerComponents
 {
     [SerializeField] private float jumpForce;
@@ -22,6 +22,24 @@ internal class PlayerJump : PlayerComponents
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
 
+    private Control control;
+    private InputAction jump;
+
+    private void Awake()
+    {
+        control = new Control();
+    }
+    
+    private void OnEnable()
+    {
+        jump = control.Player.Jump;
+        jump.Enable();
+    }
+
+    private void OnDisable()
+    {
+        jump.Disable();
+    }
 
     // Start is called before the first frame update
     protected override void Start()
