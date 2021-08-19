@@ -110,7 +110,7 @@ internal class PlayerJump : PlayerComponents
         return Mathf.Sqrt(2 * gravityStrength * jumpHeight);
     }
 
-    IEnumerator DoJump()
+    private IEnumerator DoJump()
     {
         jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
         //the initial jump
