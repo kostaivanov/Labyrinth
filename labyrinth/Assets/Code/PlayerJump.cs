@@ -8,22 +8,17 @@ internal class PlayerJump : PlayerComponents
     [SerializeField] private float decayRate;
 
     private float jumpForce_2;
-    Vector2 counterJumpForce = Vector2.down;
-
 
     private float extrHeightText = 0.1f;
 
     private bool jumpPressed;
     private bool jumpHolded;
-    //public float StandartJumpForce;
-    //public float MaxJumpForce;
-    private float jumpForce_3;
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
 
     private Control control;
-    private InputAction jump;
+    //private InputAction movement;
 
     private void Awake()
     {
@@ -32,13 +27,17 @@ internal class PlayerJump : PlayerComponents
     
     private void OnEnable()
     {
-        jump = control.Player.Jump;
-        jump.Enable();
+        //movement = control.Player.Movement;
+        //movement.Enable();
+
+        control.Player.Jump.performed += Jump;
+        control.Player.Jump.Enable();
     }
 
     private void OnDisable()
     {
-        jump.Disable();
+        //movement.Disable();
+        control.Player.Jump.Disable();
     }
 
     // Start is called before the first frame update
@@ -56,37 +55,20 @@ internal class PlayerJump : PlayerComponents
         {
             jumpPressed = true;
             jumpHolded = true;
-            //jumpForce_3 = MaxJumpForce;
-
         }
         else if (Input.GetButtonUp("Jump"))
         {
             jumpHolded = false;
-            //jumpForce_3 = StandartJumpForce;
 
         }
-        //ClampVelocityY();
-        //if (!CheckIfGrounded() && !jumpPressed)
-        //{
-        //    StartCoroutine(ApplyCounterForce());
-        //}
 
-        //if (rigidBody.velocity.y < 0)
-        //{
-        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        //}
-        //else if(rigidBody.velocity.y > 0 && !Input.GetButton("Jump"))
-        //{
-        //    rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
-        //}
     }
 
     private void FixedUpdate()
     {
         if (jumpPressed == true)
         {
-            //Jump();
-            StartCoroutine(DoJump());
+            StartCoroutine(JumpProcess());
 
             jumpPressed = false;
         }
@@ -95,22 +77,6 @@ internal class PlayerJump : PlayerComponents
             jumpPressed = false;
 
         }
-
-
-        if (!jumpHolded && Vector2.Dot(rigidBody.velocity, Vector2.up) > 0)
-        {
-            //rigidBody.AddForce(counterJumpForce * rigidBody.mass * 10f, ForceMode2D.Impulse); 
-        }
-
-    }
-
-    public void ClampVelocityY()
-    {
-        float maxVelocityY = 2;
-        Vector2 velocity = rigidBody.velocity;
-        velocity.y = Mathf.Clamp(velocity.y, Mathf.NegativeInfinity, maxVelocityY);
-        rigidBody.velocity = velocity;
-        Debug.Log("dasdasdas");
     }
 
     internal bool CheckIfGrounded()
@@ -128,7 +94,16 @@ internal class PlayerJump : PlayerComponents
         return Mathf.Sqrt(2 * gravityStrength * jumpHeight);
     }
 
-    private IEnumerator DoJump()
+    private void Jump(InputAction.CallbackContext obj)
+    {
+        Debug.Log("Jump");
+        if (CheckIfGrounded())
+        {
+            StartCoroutine(JumpProcess());
+        }
+    }
+
+    private IEnumerator JumpProcess()
     {
         jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
         //the initial jump
@@ -145,35 +120,5 @@ internal class PlayerJump : PlayerComponents
             currentForce -= decayRate * Time.fixedDeltaTime;
             yield return null;
         }
-    }
-
-    private IEnumerator ApplyCounterForce()
-    {
-        //&& Vector2.Dot(rigidBody.velocity, Vector2.up) > 0
-        while (!CheckIfGrounded())
-        {
-            //Debug.Log("counterforce ?");
-            if (!jumpHolded && rigidBody.velocity.y > 0)
-            {
-                Debug.Log("counterforce ?");
-                //rigidBody.velocity += Vector2.down * 20f * Time.deltaTime;
-                rigidBody.AddForce(Vector2.down * rigidBody.mass * 4f, ForceMode2D.Impulse);
-            }
-
-            yield return null;
-        }
-
-        Debug.Log("does this end ?");
-    }
-    private void Jump()
-    {
-        if (CheckIfGrounded())
-        {
-            jumpForce_2 = CalculateJumpForce(Physics2D.gravity.magnitude, jumpForce);
-
-            //rigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
-            rigidBody.AddForce(Vector2.up * jumpForce_2 * rigidBody.mass, ForceMode2D.Impulse);
-        }
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 internal class PlayerMovement : PlayerComponents
 {
@@ -20,10 +21,29 @@ internal class PlayerMovement : PlayerComponents
 
     private bool canMove;
 
+    private Control control;
+    private InputAction movement;
+
     public bool CanMove
     {
         get { return canMove; }
         set { canMove = value; }
+    }
+
+    private void Awake()
+    {
+        control = new Control();
+    }
+
+    private void OnEnable()
+    {
+        movement = control.Player.Movement;
+        movement.Enable();
+    }
+
+    private void OnDisable()
+    {
+        movement.Disable();
     }
 
     // Start is called before the first frame update
@@ -38,11 +58,16 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetAxisRaw("Horizontal") != 0 && CanMove == true)
+        if (movement.triggered && movement.ReadValue<float>() > 0)
         {
-            direction = FindDirection();
             moving = true;
+            direction = movement.ReadValue<float>();
         }
+        //if (Input.GetAxisRaw("Horizontal") != 0 && CanMove == true)
+        //{
+        //    direction = FindDirection();
+        //    moving = true;
+        //}
         else
         {
             moving = false;

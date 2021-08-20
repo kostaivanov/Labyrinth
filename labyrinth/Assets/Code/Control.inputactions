@@ -1,5 +1,5 @@
 {
-    "name": "New Controls",
+    "name": "Control",
     "maps": [
         {
             "name": "Player",
@@ -26,8 +26,8 @@
                 {
                     "name": "",
                     "id": "43b25491-5bb0-4f63-bd6a-168e36106470",
-                    "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/button2",
-                    "interactions": "Hold",
+                    "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/button9",
+                    "interactions": "Hold(duration=0.4,pressPoint=0.5),Press(behavior=2)",
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Jump",
@@ -38,7 +38,7 @@
                     "name": "",
                     "id": "91c02daa-d47b-4b64-b2fc-db8584d63ecc",
                     "path": "<Keyboard>/space",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "Jump",
