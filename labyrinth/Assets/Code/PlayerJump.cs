@@ -51,16 +51,16 @@ internal class PlayerJump : PlayerComponents
     void Update()
     {
 
-        if (Input.GetButtonDown("Jump") && CheckIfGrounded())
-        {
-            jumpPressed = true;
-            jumpHolded = true;
-        }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            jumpHolded = false;
+        //if (Input.GetButtonDown("Jump") && CheckIfGrounded())
+        //{
+        //    jumpPressed = true;
+        //    jumpHolded = true;
+        //}
+        //else if (Input.GetButtonUp("Jump"))
+        //{
+        //    jumpHolded = false;
 
-        }
+        //}
 
     }
 
