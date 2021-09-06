@@ -59,6 +59,7 @@ internal class PlayerMovement : PlayerComponents
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(direction);
         if (direction != 0)
         {
             moving = true;

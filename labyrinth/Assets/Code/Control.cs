@@ -73,7 +73,7 @@ public class @Control : IInputActionCollection, IDisposable
                     ""name"": ""1D Axis"",
                     ""id"": ""eb09a018-b64e-4a8c-b81c-f3374d3f508d"",
                     ""path"": ""1DAxis"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Movement"",
@@ -138,10 +138,10 @@ public class @Control : IInputActionCollection, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""1ea2fbd5-2fe4-4436-88a5-926038f10d86"",
-                    ""path"": ""<HID::ShanWan     PC/PS3/Android Gamepad>/stick/left"",
+                    ""path"": ""<Joystick>/stick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;Keyboard and Mouse"",
+                    ""groups"": ""Joystick"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -149,10 +149,10 @@ public class @Control : IInputActionCollection, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""a6e3342d-7485-4ba0-b4c6-0a16e0f3ff56"",
-                    ""path"": ""<HID::ShanWan     PC/PS3/Android Gamepad>/stick/right"",
+                    ""path"": ""<Joystick>/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;Keyboard and Mouse"",
+                    ""groups"": ""Joystick"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
