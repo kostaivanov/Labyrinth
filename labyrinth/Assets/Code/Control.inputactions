@@ -11,7 +11,7 @@
                     "id": "9d1bc75d-f435-4846-9887-2310b9c72261",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Hold"
                 },
                 {
                     "name": "Movement",
@@ -26,7 +26,7 @@
                 {
                     "name": "",
                     "id": "43b25491-5bb0-4f63-bd6a-168e36106470",
-                    "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/button9",
+                    "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/button4",
                     "interactions": "Hold(duration=0.4,pressPoint=0.5),Press(behavior=2)",
                     "processors": "",
                     "groups": "Joystick",
@@ -60,7 +60,7 @@
                     "name": "1D Axis",
                     "id": "eb09a018-b64e-4a8c-b81c-f3374d3f508d",
                     "path": "1DAxis",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "Movement",
@@ -128,7 +128,7 @@
                     "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/stick/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick",
+                    "groups": "Joystick;Keyboard and Mouse",
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -139,7 +139,7 @@
                     "path": "<HID::ShanWan     PC/PS3/Android Gamepad>/stick/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick",
+                    "groups": "Joystick;Keyboard and Mouse",
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
